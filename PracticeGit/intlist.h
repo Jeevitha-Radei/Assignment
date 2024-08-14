@@ -11,7 +11,7 @@
 // 
 //   a) Create – this will create a new linked list.
 //	  b) Delete – this will delete the list and all the linked elements.
-//	  c) AddAtEnd – this will add an element to the end of the list.
+//	  c) Add – this will add an element to the end of the list.
 //	  d) Insert – this will insert an element at a particular index(zero based).
 //   e) RemoveAt – this will remove the element at a particular index(zero based).
 //	  f) Remove – removes the first occurrence of a specific element.
@@ -19,7 +19,7 @@
 //	  h) Get – gets the element at a particular index.
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //   intlist.h
-//   Program on Linked list header file
+//   Program on main branch
 //--------------------------------------------------------------------------------------------
 #ifndef INTLIST_H
 #define INTLIST_H
