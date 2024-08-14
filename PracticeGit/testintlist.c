@@ -24,6 +24,7 @@ int main() {
    printList(head);
    // Count the number of elements in the list
    printf("Number of elements in the list: %d\n", Count(head));
+
    // Get the element at the specified index
    int index = 3;
    printf("Element at index %d: %d\n", index, Get(head, index));

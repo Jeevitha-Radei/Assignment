@@ -134,7 +134,6 @@ int Count(struct node* head) {
 int Get(struct node* head, int index) {
    struct node* current = head;
    int i = 0;
-
    while (current != NULL && i < index) {
       current = current->next;
       i++;
