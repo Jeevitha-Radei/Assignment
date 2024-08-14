@@ -23,6 +23,7 @@
 //--------------------------------------------------------------------------------------------
 #ifndef INTLIST_H
 #define INTLIST_H
+
 #define Failure 1;
 
 // Define a structure of node
