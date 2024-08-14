@@ -9,5 +9,5 @@
 #include <stdio.h>
 
 int main() {
-	printf("Hey! World\n");
+	printf("Hello World\n");
 }
