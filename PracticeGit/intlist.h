@@ -31,14 +31,14 @@ struct node {
 	struct node* next;
 };
 
-struct node* CreateList(int initialData);
-void AddAtEnd(struct node* head, int newData);
-void Insert(struct node* head, int index, int newData);
-void RemoveAt(struct node** headRef, int index);
-void Remove(struct node** headRef, int initialData);
-int Count(struct node* head);
-int Get(struct node* head, int index);
-void Delete(struct node** headRef);
-void printList(struct node* head);
+struct node* CreateList (int initialData);
+void AddAtEnd (struct node* head, int newData);
+void Insert (struct node* head, int index, int newData);
+void RemoveAt (struct node** headRef, int index);
+void Remove (struct node** headRef, int initialData);
+int Count (struct node* head);
+int Get (struct node* head, int index);
+void Delete (struct node** headRef);
+void printList (struct node* head);
 
 #endif INTLIST_H
