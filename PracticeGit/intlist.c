@@ -75,7 +75,7 @@ void RemoveAt (struct node* head, int index) {
 		temp = head;
 		head = head->next; // Update head to the next node
 		free (temp); 
-		return;
+		return ;
 	}
 	// Traverse to the node before the specified index
 	for (int i = 0; current != NULL && i < index - 1; i++) {
