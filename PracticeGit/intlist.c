@@ -1,16 +1,14 @@
-//------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 //   intlist.c
 //   Program on Linked List functions.
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 #include <stdio.h>
-#include <stdlib.h>
+#include <malloc.h>
 #include "intlist.h"
 
-// Error message for memory allocation failure
-const char* memoryAllocationError = "Memory allocation failed.\n";
 // Initialize the head pointer of the linked list to NULL.
 struct node* head = NULL;
 
@@ -18,8 +16,7 @@ struct node* head = NULL;
 struct node* CreateList (int initialData) {
 	struct node* head = (struct node*)malloc (sizeof (struct node));
 	if (head == NULL) {
-		printf ("%s", memoryAllocationError);
-		exit (1);
+		return ERROR_MEM_ALLOC;// Return an error if memory allocation failed
 	}
 	head->data = initialData;
 	head->next = NULL;
@@ -27,39 +24,40 @@ struct node* CreateList (int initialData) {
 }
 
 //	Function to add an element to the end of the list
-void AddAtEnd (struct node* head, int newData) {
+void Append (struct node* head, int newData) {
 	struct node* current = head;
-	// Traverse to the end of the list
 	while (current->next != NULL) {
 		current = current->next;
 	}
 	struct node* newNode = (struct node*)malloc (sizeof (struct node));
 	if (newNode == NULL) {
-		printf ("%s", memoryAllocationError);
-		exit (1);
+		return ERROR_MEM_ALLOC;//Return an error if memory allocation failed
 	}
 	newNode->data = newData;
 	newNode->next = NULL;
+	if (head == NULL) {
+		// If list is empty, make newNode the head
+		return newNode;
+	}
 	current->next = newNode;
+	return head;
 }
 
 //  Function to insert an element at the specified index (zero based)
 void Insert (struct node* head, int index, int newData) {
+	struct node* newNode = (struct node*)malloc (sizeof (struct node));
+	if (newNode == NULL) {
+		return ERROR_MEM_ALLOC;// Return an error if memory allocation failed
+	}
 	struct node* current = head;
 	int i = 0;
 	// Traverse to the node before the specified index
-	while (current != NULL && i < index - 1) {
+	while (current != NULL && i < index - 1) {			
 		current = current->next;
 		i++;
 	}
 	if (current == NULL) {
-		printf ("Invalid index.\n");
-		return;
-	}
-	struct node* newNode = (struct node*)malloc (sizeof (struct node));
-	if (newNode == NULL) {
-		printf ("%s", memoryAllocationError);
-		exit (1);
+		return ERROR_INDEX_INVALID; //Return an error if invalid index found
 	}
 	newNode->data = newData;
 	newNode->next = current->next;
@@ -67,25 +65,24 @@ void Insert (struct node* head, int index, int newData) {
 }
 
 //Function to Remove an element at specified index (zero based)
-void RemoveAt (struct node** headRef, int index) {
-	if (*headRef == NULL) {
-		printf (" List is empty.\n");
-		return;
+void RemoveAt (struct node* head, int index) {
+	if (head == NULL) {
+		return ERROR_EMPTY_LIST; // Return an error if the list is empty
 	}
-	struct node* current = *headRef;
+	struct node* current = head;
 	struct node* temp = NULL;
 	if (index == 0) {
-		*headRef = current->next;
-		free (current);
-		return;
+		temp = head;
+		head = head->next; // Update head to the next node
+		free (temp); 
+		return ;
 	}
 	// Traverse to the node before the specified index
 	for (int i = 0; current != NULL && i < index - 1; i++) {
 		current = current->next;
 	}
 	if (current == NULL || current->next == NULL) {
-		printf ("Invalid index.\n");
-		return;
+		return ERROR_INDEX_INVALID; //Return an error if invalid index found
 	}
 	temp = current->next;
 	current->next = temp->next;
@@ -93,15 +90,14 @@ void RemoveAt (struct node** headRef, int index) {
 }
 
 // Function to remove the first occurrence of a specific element
-void Remove (struct node** headRef, int initialData) {
-	if (*headRef == NULL) {
-		printf (" List is empty.\n");
-		return;
+void Remove (struct node* head, int initialData) {
+	if (head == NULL) {
+		return ERROR_EMPTY_LIST; // Return an error if the list is empty
 	}
-	struct node* current = *headRef;
+	struct node* current = head;
 	// To check the head node is going to get removed
 	if (current != NULL && current->data == initialData) {
-		*headRef = current->next;
+		head = current->next;
 		free (current);
 		return;
 	}
@@ -115,8 +111,6 @@ void Remove (struct node** headRef, int initialData) {
 		}
 		current = current->next;
 	}
-	// If the node was not found
-	printf ("Element with initialData %d not found in the list.\n", initialData);
 }
 
 // Function to count the number of elements in the list
@@ -134,13 +128,13 @@ int Count (struct node* head) {
 int Get (struct node* head, int index) {
 	struct node* current = head;
 	int i = 0;
+
 	while (current != NULL && i < index) {
 		current = current->next;
 		i++;
 	}
 	if (current == NULL) {
-		printf ("Index out of bounds.\n");
-		return -1; // Return an error
+		return ERROR_OUT_BOUNDS; // Return an error if index is out of bounds
 	}
 	else {
 		return current->data;
@@ -148,15 +142,14 @@ int Get (struct node* head, int index) {
 }
 
 // Function to delete the entire list 
-void Delete (struct node** headRef) {
-	struct node* current = *headRef;
+void Delete (struct node* head) {
+	struct node* current = head;
 	struct node* next;
 	while (current != NULL) {
 		next = current->next;
 		free (current);
 		current = next;
 	}
-	*headRef = NULL;
 }
 
 //  Function to print the list that is modified

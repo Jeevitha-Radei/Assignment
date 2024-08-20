@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-//------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
 // Implementing a linked list data structure to handle integer elements. The implementation will consist of three files:
 //                         intlist.h                -      the header file
 //                         intlist.c                -      the code.
@@ -17,13 +17,16 @@
 //	  f) Remove – removes the first occurrence of a specific element.
 //   g) Count – number of elements in the list.
 //	  h) Get – gets the element at a particular index.
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 //   intlist.h
 //   Program on Linked list header file
 //--------------------------------------------------------------------------------------------
 #ifndef INTLIST_H
 #define INTLIST_H
-#define Failure 1;
+#define ERROR_MEM_ALLOC -1
+#define ERROR_OUT_BOUNDS -2
+#define ERROR_INDEX_INVALID -3
+#define ERROR_EMPTY_LIST -4
 
 // Define a structure of node
 struct node {
@@ -32,13 +35,13 @@ struct node {
 };
 
 struct node* CreateList (int initialData);
-void AddAtEnd (struct node* head, int newData);
+void Append (struct node* head, int newData);
 void Insert (struct node* head, int index, int newData);
-void RemoveAt (struct node** headRef, int index);
-void Remove (struct node** headRef, int initialData);
+void RemoveAt (struct node* head, int index);
+void Remove (struct node* head, int initialData);
 int Count (struct node* head);
 int Get (struct node* head, int index);
-void Delete (struct node** headRef);
+void Delete (struct node* head);
 void printList (struct node* head);
 
 #endif INTLIST_H
