@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include "intlist.h"
 
+//Pointer to the head of the linked list
 struct node* head;
 
-//  Function to print the list that is modified
 void printList (struct node* head) {
    struct node* current = head;
    while (current != NULL) {
@@ -25,7 +25,7 @@ int main () {
    Append (head, 1);
    Append (head, 12);
    Append (head, 12);
-   Append (head, 16);
+   Append (head, -2);
    Append (head, 23);
    Insert (head, 2, 14);
    RemoveAt (head, 3);
@@ -33,17 +33,13 @@ int main () {
 
    printf ("Elements in the List:\n ");
    printList (head);
-   // Count the number of elements in the list
-   printf ("Number of elements in the list: %d\n", Count (head));
+   printf ("Number of elements in the list: %d\n", Count (head));  // Count the number of elements in the list
 
    // Get the element at the specified index
-   int index = 2;
+   int index = 4;
    int value = Get (head, index);
-   if (value != -2)
-      printf ("Value at index %d: %d\n", index, value);
-   printf ("Value at index %d: %d\n", index, value);
-   else
-      printf ("Index %d out of bounds\n", index);
+   if (value != ERROR_INDEX_INVALID) printf ("Value at index %d: %d\n", index, value);
+   else printf ("Invalid Index\n");
 
    // Delete the entire list
    Delete (head);
@@ -52,8 +48,7 @@ int main () {
       printf ("The entire list is deleted: ");
       printList (head);  // Prints "NULL" since list is empty
    }
-   else
-      printf ("List is not deleted");
+   else printf ("List is not deleted");
 
    return 0;
 }
