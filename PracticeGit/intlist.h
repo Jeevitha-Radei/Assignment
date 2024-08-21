@@ -23,17 +23,17 @@
 //--------------------------------------------------------------------------------------------
 #ifndef INTLIST_H
 #define INTLIST_H
-#define ERROR_MEM_ALLOC -1
-#define ERROR_OUT_BOUNDS -2
-#define ERROR_INDEX_INVALID -3
-#define ERROR_EMPTY_LIST -4
+#define ERROR_MEM_ALLOC -1	  // Return an error if memory allocation failed
+#define ERROR_OUT_BOUNDS -2  // Return an error if index is out of bounds
+#define ERROR_INDEX_INVALID -3  //Return an error if invalid index found
+#define ERROR_EMPTY_LIST -4	// Return an error if the list is empty
 
 // Define a structure of node
 struct node {
 	int data;
 	struct node* next;
 };
-
+// Functions operations
 struct node* CreateList (int initialData);
 void Append (struct node* head, int newData);
 void Insert (struct node* head, int index, int newData);

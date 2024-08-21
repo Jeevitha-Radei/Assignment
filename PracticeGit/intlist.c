@@ -5,7 +5,6 @@
 //   intlist.c
 //   Program on Linked List functions.
 //--------------------------------------------------------------------------------------------
-#include <stdio.h>
 #include <malloc.h>
 #include "intlist.h"
 
@@ -16,7 +15,7 @@ struct node* head = NULL;
 struct node* CreateList (int initialData) {
 	struct node* head = (struct node*)malloc (sizeof (struct node));
 	if (head == NULL) {
-		return ERROR_MEM_ALLOC;// Return an error if memory allocation failed
+		return ERROR_MEM_ALLOC;
 	}
 	head->data = initialData;
 	head->next = NULL;
@@ -31,7 +30,7 @@ void Append (struct node* head, int newData) {
 	}
 	struct node* newNode = (struct node*)malloc (sizeof (struct node));
 	if (newNode == NULL) {
-		return ERROR_MEM_ALLOC;//Return an error if memory allocation failed
+		return ERROR_MEM_ALLOC;
 	}
 	newNode->data = newData;
 	newNode->next = NULL;
@@ -47,7 +46,7 @@ void Append (struct node* head, int newData) {
 void Insert (struct node* head, int index, int newData) {
 	struct node* newNode = (struct node*)malloc (sizeof (struct node));
 	if (newNode == NULL) {
-		return ERROR_MEM_ALLOC;// Return an error if memory allocation failed
+		return ERROR_MEM_ALLOC;
 	}
 	struct node* current = head;
 	int i = 0;
@@ -57,7 +56,7 @@ void Insert (struct node* head, int index, int newData) {
 		i++;
 	}
 	if (current == NULL) {
-		return ERROR_INDEX_INVALID; //Return an error if invalid index found
+		return ERROR_INDEX_INVALID; 
 	}
 	newNode->data = newData;
 	newNode->next = current->next;
@@ -67,7 +66,7 @@ void Insert (struct node* head, int index, int newData) {
 //Function to Remove an element at specified index (zero based)
 void RemoveAt (struct node* head, int index) {
 	if (head == NULL) {
-		return ERROR_EMPTY_LIST; // Return an error if the list is empty
+		return ERROR_EMPTY_LIST;
 	}
 	struct node* current = head;
 	struct node* temp = NULL;
@@ -82,7 +81,7 @@ void RemoveAt (struct node* head, int index) {
 		current = current->next;
 	}
 	if (current == NULL || current->next == NULL) {
-		return ERROR_INDEX_INVALID; //Return an error if invalid index found
+		return ERROR_INDEX_INVALID; 
 	}
 	temp = current->next;
 	current->next = temp->next;
@@ -92,7 +91,7 @@ void RemoveAt (struct node* head, int index) {
 // Function to remove the first occurrence of a specific element
 void Remove (struct node* head, int initialData) {
 	if (head == NULL) {
-		return ERROR_EMPTY_LIST; // Return an error if the list is empty
+		return ERROR_EMPTY_LIST; 
 	}
 	struct node* current = head;
 	// To check the head node is going to get removed
@@ -134,7 +133,7 @@ int Get (struct node* head, int index) {
 		i++;
 	}
 	if (current == NULL) {
-		return ERROR_OUT_BOUNDS; // Return an error if index is out of bounds
+		return ERROR_OUT_BOUNDS; 
 	}
 	else {
 		return current->data;
@@ -150,14 +149,4 @@ void Delete (struct node* head) {
 		free (current);
 		current = next;
 	}
-}
-
-//  Function to print the list that is modified
-void printList (struct node* head) {
-	struct node* current = head;
-	while (current != NULL) {
-		printf ("%d -> ", current->data);
-		current = current->next;
-	}
-	printf ("NULL\n");
 }

@@ -10,6 +10,16 @@
 
 struct node* head;
 
+//  Function to print the list that is modified
+void printList (struct node* head) {
+	struct node* current = head;
+	while (current != NULL) {
+		printf ("%d -> ", current->data);
+		current = current->next;
+	}
+	printf ("NULL\n");
+}
+
 int main () {
 	head = CreateList (0);
 	Append (head, 1);
