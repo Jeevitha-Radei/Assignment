@@ -33,14 +33,18 @@ int main () {
 
    printf ("Elements in the List:\n ");
    printList (head);
+   printf ("\n");
    printf ("Number of elements in the list: %d\n", Count (head));  // Count the number of elements in the list
+   printf ("\n");
 
    // Get the element at the specified index
-   int index = 4;
-   int value = Get (head, index);
-   if (value != ERROR_INDEX_INVALID) printf ("Value at index %d: %d\n", index, value);
-   else printf ("Invalid Index\n");
-
+   int index = 9;
+   int error = 0;
+   int value = Get (head, index, &error);
+   if (error) printf ("Invalid Index\n");
+   else printf ("Value at index %d: %d\n", index, value);
+   printf ("\n");
+   
    // Delete the entire list
    Delete (head);
    head = NULL;

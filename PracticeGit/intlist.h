@@ -27,29 +27,31 @@
 #ifndef INTLIST_H
 #define INTLIST_H
 // Define error codes
-#define ERROR_MEM_ALLOC "Memory allocation failed"	  // Return an error if memory allocation failed
-#define ERROR_INDEX_INVALID "Invalid index found"   //Return an error if invalid index found
-#define ERROR_EMPTY_LIST "List is empty"	// Return an error if the list is empty
+#define SUCCESS 0 // Return success after completion
+#define ERROR_MEM_ALLOC -1	  // Return an error if memory allocation failed
+#define ERROR_INDEX_INVALID -2   //Return an error if invalid index found
+#define ERROR_EMPTY_LIST -3	// Return an error if the list is empty
 
 // Define a structure of node
 struct node {
    int data;
    struct node* next;
 };
+
 /// <summary>Function to create a empty linked list.</summary>
 struct node* CreateList (int initialData);
 
 /// <summary>Function to add an element to the end of the list.</summary>
-void Append (struct node* head, int newData);
+int Append (struct node* head, int newData);
 
 /// <summary>Function to insert an element at the specified index (zero based).</summary>
-void Insert (struct node* head, int index, int newData);
+int Insert (struct node* head, int index, int newData);
 
 /// <summary>Function to Remove an element at specified index (zero based).</summary>
-void RemoveAt (struct node* head, int index);
+int RemoveAt (struct node* head, int index);
 
 /// <summary>Function to remove the first occurrence of a specific element.</summary>
-void Remove (struct node* head, int initialData);
+int Remove (struct node* head, int initialData);
 
 /// <summary>Function to count the number of elements in the list.</summary>
 int Count (struct node* head);
