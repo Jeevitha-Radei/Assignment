@@ -57,7 +57,7 @@ int Remove (struct node* head, int initialData);
 int Count (struct node* head);
 
 /// <summary>Function to Get the element at a Particular index.</summary>
-int Get (struct node* head, int index);
+int Get (struct node* head, int index, int* error);
 
 /// <summary>Function to delete the entire list.</summary>
 void Delete (struct node* head);

@@ -38,7 +38,7 @@ int main () {
    printf ("\n");
 
    // Get the element at the specified index
-   int index = 9;
+   int index = 4;
    int error = 0;
    int value = Get (head, index, &error);
    if (error) printf ("Invalid Index\n");
