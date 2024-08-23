@@ -8,33 +8,34 @@
 #include <malloc.h>
 #include "intlist.h"
 
-// Initialize the head pointer of the linked list to NULL.
-struct node* head = NULL;
-
-struct node* CreateList (int initialData) {
-   struct node* head = (struct node*)malloc (sizeof (struct node));
-   if (head == NULL) return ERROR_MEM_ALLOC;
-   head->data = initialData;
-   head->next = NULL;
+List* CreateList () {
+   List* head = (struct node*)malloc (sizeof (List));
+   if (head == NULL) return NULL;
+   head->first = NULL;
    return head;
 }
 
-int Append (struct node* head, int newData) {
-   struct node* current = head;
-   while (current->next != NULL) current = current->next;
+int Append (List* head, int newData) {
    struct node* newNode = (struct node*)malloc (sizeof (struct node));
    if (newNode == NULL) return ERROR_MEM_ALLOC;
    newNode->data = newData;
    newNode->next = NULL;
-   if (head == NULL) return newNode;  // If list is empty, make newNode the head
-   current->next = newNode;
+   struct node* current = head->first;
+   if (current == NULL) { 
+      head->first = newNode;
+      return SUCCESS;
+   }
+   else { 
+      while (current->next != NULL) current = current->next;
+      current->next = newNode;
+   }
    return SUCCESS; 
 }
 
-int Insert (struct node* head, int index, int newData) {
+int Insert (List* head, int index, int newData) {
    struct node* newNode = (struct node*)malloc (sizeof (struct node));
    if (newNode == NULL) return ERROR_MEM_ALLOC;
-   struct node* current = head;
+   struct node* current = head->first;
    for (int i = 0; current != NULL && i < index - 1; i++) current = current->next;  // Traverse to the node before the specified index
    if (current == NULL) return ERROR_INDEX_INVALID;
    newNode->data = newData;
@@ -43,9 +44,9 @@ int Insert (struct node* head, int index, int newData) {
    return SUCCESS;
 }
 
-int RemoveAt (struct node* head, int index) {
-   if (head == NULL) return ERROR_EMPTY_LIST;
-   struct node* current = head;
+int RemoveAt (List* head, int index) {
+   struct node* current = head->first;
+   if (current == NULL) return ERROR_EMPTY_LIST;
    for (int i = 0; current != NULL && i < index - 1; i++) current = current->next; // Traverse to the node before the specified index
    if (current == NULL || current->next == NULL) return ERROR_INDEX_INVALID;
    struct node* temp = current->next;
@@ -54,9 +55,9 @@ int RemoveAt (struct node* head, int index) {
    return SUCCESS;
 }
 
-int Remove (struct node* head, int initialData) {
-   if (head == NULL) return ERROR_EMPTY_LIST;
-   struct node* current = head;
+int Remove (List* head, int initialData) {
+   struct node* current = head->first;
+   if (current == NULL) return ERROR_EMPTY_LIST;
    if (current != NULL && current->data == initialData) {     // To check the head node is going to get removed
       head = current->next;
       free (current);
@@ -73,9 +74,9 @@ int Remove (struct node* head, int initialData) {
    }
 }
 
-int Count (struct node* head) {
+int Count (List* head) {
    int count = 0;
-   struct node* current = head;
+   struct node* current = head->first;
    while (current != NULL) {
       current = current->next;
       count++;
@@ -83,8 +84,8 @@ int Count (struct node* head) {
    return count;
 }
 
-int Get (struct node* head, int index, int* error) {
-   struct node* current = head;
+int Get (List* head, int index, int* error) {
+   struct node* current = head->first;
    for (int i = 0; current != NULL && i < index; i++) current = current->next;
    if (current == NULL) {
       *error = 1; // Set error 
@@ -96,12 +97,13 @@ int Get (struct node* head, int index, int* error) {
    }
 }
 
-void Delete (struct node* head) {
-   struct node* current = head;
+void Delete (List* head) {
+   struct node* current = head->first;
    struct node* next;
    while (current != NULL) {
       next = current->next;
       free (current);
       current = next;
    }
+   head->first = NULL;
 }

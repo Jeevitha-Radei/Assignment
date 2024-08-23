@@ -38,31 +38,36 @@ struct node {
    struct node* next;
 };
 
+// Structure which points to head
+typedef struct HeadList {
+   struct node* first;
+}List;
+
 /// <summary>Function to create a empty linked list.</summary>
-struct node* CreateList (int initialData);
+List* CreateList ();
 
 /// <summary>Function to add an element to the end of the list.</summary>
-int Append (struct node* head, int newData);
+int Append (List* head, int newData);
 
 /// <summary>Function to insert an element at the specified index (zero based).</summary>
-int Insert (struct node* head, int index, int newData);
+int Insert (List* head, int index, int newData);
 
 /// <summary>Function to Remove an element at specified index (zero based).</summary>
-int RemoveAt (struct node* head, int index);
+int RemoveAt (List* head, int index);
 
 /// <summary>Function to remove the first occurrence of a specific element.</summary>
-int Remove (struct node* head, int initialData);
+int Remove (List* head, int initialData);
 
 /// <summary>Function to count the number of elements in the list.</summary>
-int Count (struct node* head);
+int Count (List* head);
 
 /// <summary>Function to Get the element at a Particular index.</summary>
-int Get (struct node* head, int index, int* error);
+int Get (List* head, int index, int* error);
 
 /// <summary>Function to delete the entire list.</summary>
-void Delete (struct node* head);
+void Delete (List* head);
 
 /// <summary>Function to print the list that is modified.</summary>
-void printList (struct node* head);
+void printList (List* head);
 
 #endif INTLIST_H
