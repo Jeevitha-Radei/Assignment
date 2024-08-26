@@ -28,9 +28,10 @@
 #define INTLIST_H
 // Define error codes
 #define SUCCESS 0 // Return success after completion
-#define ERROR_MEM_ALLOC -1	  // Return an error if memory allocation failed
+#define ERROR_MEMORY_ALLOCATION -1 // Return an if meory allocation failed
 #define ERROR_INDEX_INVALID -2   //Return an error if invalid index found
 #define ERROR_EMPTY_LIST -3	// Return an error if the list is empty
+#define ERROR_DATA_NOT_FOUND -4 // Return an error if data not found in the list
 
 // Define a structure of node
 struct node {
@@ -41,7 +42,10 @@ struct node {
 // Structure which points to head
 typedef struct HeadList {
    struct node* first;
-}List;
+}List; 
+
+/// <summary>Function to handle Memory allocation failure.</summary>
+void* SafeMalloc (size_t size);
 
 /// <summary>Function to create a empty linked list.</summary>
 List* CreateList ();
@@ -69,5 +73,8 @@ void Delete (List* head);
 
 /// <summary>Function to print the list that is modified.</summary>
 void printList (List* head);
+
+/// <summary>Function to handle and print errors.</summary>
+void handleError (int errorCode);
 
 #endif INTLIST_H
