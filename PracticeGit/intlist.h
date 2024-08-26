@@ -28,7 +28,7 @@
 #define INTLIST_H
 // Define error codes
 #define SUCCESS 0 // Return success after completion
-#define ERROR_MEMORY_ALLOCATION -1 // Return an if meory allocation failed
+#define ERROR_MEMORY_ALLOCATION -1 // Return an error if memory allocation failed
 #define ERROR_INDEX_INVALID -2   //Return an error if invalid index found
 #define ERROR_EMPTY_LIST -3	// Return an error if the list is empty
 #define ERROR_DATA_NOT_FOUND -4 // Return an error if data not found in the list
@@ -56,7 +56,7 @@ int Append (List* head, int newData);
 /// <summary>Function to insert an element at the specified index (zero based).</summary>
 int Insert (List* head, int index, int newData);
 
-/// <summary>Function to Remove an element at specified index (zero based).</summary>
+/// <summary>Function to remove an element at specified index (zero based).</summary>
 int RemoveAt (List* head, int index);
 
 /// <summary>Function to remove the first occurrence of a specific element.</summary>
@@ -65,7 +65,7 @@ int Remove (List* head, int initialData);
 /// <summary>Function to count the number of elements in the list.</summary>
 int Count (List* head);
 
-/// <summary>Function to Get the element at a Particular index.</summary>
+/// <summary>Function to get the element at a particular index.</summary>
 int Get (List* head, int index, int* error);
 
 /// <summary>Function to delete the entire list.</summary>

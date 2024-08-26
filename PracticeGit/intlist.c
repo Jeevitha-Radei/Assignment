@@ -13,7 +13,7 @@ void* SafeMalloc (size_t size) {
    struct node* ptr = malloc (size);
    if (ptr == NULL) {
       perror ("Memory allocation failed");
-      exit (EXIT_FAILURE); // Or return a specific error code if you want to handle it differently
+      exit (EXIT_FAILURE); 
    }
    return ptr;
 }
