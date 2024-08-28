@@ -1,54 +1,57 @@
+#pragma warning(disable:4996)
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joiners at Metamation, Batch - July 2024.
+// Copyright (c) Metamation India.
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Number conversion game 
+// Program to get user input and convert given decimal number to different forms such as Hexadecimal and Binary
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// conversion.c
+// Program on main branch.
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
+
 // Function to convert decimal to Binary
 void DecToBinary (int n) {
-   if (n == 0) {   // Handle zero case
+   unsigned int num = (unsigned int)n; // To handle negative numbers in two's complement
+   int binaryNum[32];  // Array to store binary number (32 bits)
+   int i = 0;
+   if (num == 0) {
       printf ("0");
       return;
    }
-   if (n < 0) {    // Handle Negative Integers
-      printf ("-");
-      n = -n;
-   }
-   int binaryNum[32];  // Array to store binary number (32 bits)
-   int i = 0;
-   while (n > 0) {        
-      binaryNum[i] = n % 2;
-      n = n / 2;
+   while (num > 0) { 
+      binaryNum[i] = num % 2;
+      num /= 2;
       i++;
    }
    for (int j = i - 1; j >= 0; j--) printf ("%d", binaryNum[j]);     // Print binary number in reverse order
 }
 
-// Function to print decimal number in hexadecimal using %X
+// Function to print decimal number in hexadecimal 
 void DecToHexadecimal (int n) {
-   if (n == 0) {  
-      printf ("0");
-      return;
-   }
-   if (n < 0) {
-      printf ("-");
-      n = -n;
-   }
-   char hexNum[32];       // Array to store hexadecimal number
+   unsigned int num = (unsigned int)n; // To handle negative numbers in two's complement
+   char hexNum[32];                    // Array to store hexadecimal number
    int i = 0;
-   while (n != 0) {
-      int temp = n % 16;
-      if (temp < 10)
-         hexNum[i] = temp + '0';  // Convert to ASCII
-      else
-         hexNum[i] = temp + 'A' - 10;  // Convert to ASCII (A-F)
-      n = n / 16;
+   while (num != 0) {
+      int temp = num % 16;
+      if (temp < 10) hexNum[i] = temp + '0';     // Convert to ASCII
+      else hexNum[i] = temp + 'A' - 10;          // Convert to ASCII (A-F)
+      num /= 16;
       i++;
    }
+   hexNum[i] = '\0'; // Null-terminate the string
    for (int j = i - 1; j >= 0; j--) printf ("%c", hexNum[j]);
-   //printf ("%X", n);
+   printf ("%X", n);
 }
 
 int main () {
    int decimalNumber;
-   printf ("Enter an Integer: ");
-   if (scanf_s ("%d", &decimalNumber)) {
-      printf ("Input: %d\n", decimalNumber);
+   int result;
+   char term;             // To check for additional characters
+   printf ("Input: ");
+   result = scanf ("%d%c", &decimalNumber, &term);
+   if (result == 2 && ((term == '\n') || (term == ' '))) {
       printf ("HEX: ");
       DecToHexadecimal (decimalNumber);
       printf ("\n");
@@ -56,7 +59,7 @@ int main () {
       DecToBinary (decimalNumber);
       printf ("\n");
    }
-   else printf ("Invalid Integer.\n");
+   else printf ("Invalid Integer.\n"); 
 
    return 0;
 }
