@@ -4,62 +4,55 @@
 // Copyright (c) Metamation India.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Number conversion game 
-// Program to get user input and convert given decimal number to different forms such as Hexadecimal and Binary
+// Program to get user input and convert given decimal number to Hexadecimal and Binary
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 // conversion.c
-// Program on main branch.
+// Program on A3 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 
 // Function to convert decimal to Binary
 void DecToBinary (int n) {
-   unsigned int num = (unsigned int)n; // To handle negative numbers in two's complement
-   int binaryNum[32];  // Array to store binary number (32 bits)
-   int i = 0;
-   if (num == 0) {
-      printf ("0");
-      return;
-   }
-   while (num > 0) { 
-      binaryNum[i] = num % 2;
-      num /= 2;
-      i++;
-   }
-   for (int j = i - 1; j >= 0; j--) printf ("%d", binaryNum[j]);     // Print binary number in reverse order
-}
+   for (int i = 7; i >= 0; i--) printf ("%d", (n >> i) & 1);
+   printf ("\n");
+}  
 
-// Function to print decimal number in hexadecimal 
+// Function to convert decimal to Hexadecimal
 void DecToHexadecimal (int n) {
-   unsigned int num = (unsigned int)n; // To handle negative numbers in two's complement
-   char hexNum[32];                    // Array to store hexadecimal number
+   unsigned int num = (unsigned int)n & 0xFF;   // To handle negative numbers in two's complement
+   char hexNum[2];  // Array to store hexadecimal number
    int i = 0;
-   while (num != 0) {
+   while (num != 0) {   // convert to hexadecimal using modulus division operator
       int temp = num % 16;
-      if (temp < 10) hexNum[i] = temp + '0';     // Convert to ASCII
-      else hexNum[i] = temp + 'A' - 10;          // Convert to ASCII (A-F)
+      if (temp < 10) hexNum[i] = temp + '0';   // Convert to ASCII
+      else hexNum[i] = temp + 'A' - 10;   // Convert to ASCII (A-F)
       num /= 16;
       i++;
    }
-   hexNum[i] = '\0'; // Null-terminate the string
-   for (int j = i - 1; j >= 0; j--) printf ("%c", hexNum[j]);
-   printf ("%X", n);
+   for (int j = 1; j >= i; j--) printf ("0");   // Print leading zeros if necessary to ensure 8 - bit output
+   for (int j = i - 1; j >= 0; j--) printf ("%c", hexNum[j]);   // Print Hexadecimal in reverse order
 }
 
 int main () {
    int decimalNumber;
    int result;
-   char term;             // To check for additional characters
-   printf ("Input: ");
-   result = scanf ("%d%c", &decimalNumber, &term);
-   if (result == 2 && ((term == '\n') || (term == ' '))) {
-      printf ("HEX: ");
-      DecToHexadecimal (decimalNumber);
-      printf ("\n");
-      printf ("Binary: ");
-      DecToBinary (decimalNumber);
-      printf ("\n");
+   char term;   // To check for additional characters
+   while (1) {
+      printf ("Input: ");
+      result = scanf ("%d%c", &decimalNumber, &term);  // Read input and check for additional characters
+      if (result == 2 && ((term == '\n') || (term == ' '))) {
+         printf ("HEX: ");
+         DecToHexadecimal (decimalNumber);
+         printf ("\n");
+         printf ("Binary: ");
+         DecToBinary (decimalNumber);
+         printf ("\n");
+         break;
+      }
+      else {
+         printf ("Invalid Integer, try again. \n");
+         while (getchar () != '\n');
+      }
    }
-   else printf ("Invalid Integer.\n"); 
-
    return 0;
 }
