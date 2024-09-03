@@ -11,26 +11,52 @@
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 
-// Function to convert decimal to Binary
-void DecToBinary (int n) {
-   for (int i = 7; i >= 0; i--) printf ("%d", (n >> i) & 1);
-   printf ("\n");
-}  
+#define BITS 32
 
-// Function to convert decimal to Hexadecimal
+/// <summary>Function to convert decimal to Binary.</summary>
+void DecToBinary (int n) {
+   for (int i = 15; i >= 0; i--) printf ("%d", (n >> i) & 1);
+   printf ("\n");
+}
+
+/// <summary>Function to convert decimal to Hexadecimal.</summary>
 void DecToHexadecimal (int n) {
-   unsigned int num = (unsigned int)n & 0xFF;   // To handle negative numbers in two's complement
-   char hexNum[2];  // Array to store hexadecimal number
-   int i = 0;
-   while (num != 0) {   // convert to hexadecimal using modulus division operator
-      int temp = num % 16;
-      if (temp < 10) hexNum[i] = temp + '0';   // Convert to ASCII
-      else hexNum[i] = temp + 'A' - 10;   // Convert to ASCII (A-F)
-      num /= 16;
-      i++;
+   char hexDigits[8];  // Array to store hexadecimal digits
+   int hexIndex = 0;
+   if (n < 0) {   // Handle negative integers by converting to two's complement
+      int temp = -n;     // Convert positive part to binary
+      int binary[BITS];
+      for (int i = 0; i < BITS; i++) binary[i] = (temp >> i) & 1;  // Convert to binary
+      for (int i = 0; i < BITS; i++) binary[i] = 1 - binary[i];  // Invert the bits
+      int carry = 1;      // Add 1 to the result
+      for (int i = 0; i < BITS; i++) {
+         int sum = binary[i] + carry;
+         binary[i] = sum % 2;
+         carry = sum / 2;
+      }
+      for (int i = BITS - 1; i >= 0; i -= 4) {   // Convert binary array to hexadecimal
+         int value = 0;
+         for (int j = 0; j < 4; j++) value = (value << 1) | binary[i - j];
+         if (value < 10) hexDigits[hexIndex++] = value + '0';   // Convert to character '0'-'9'
+         else hexDigits[hexIndex++] = value - 10 + 'A';   // Convert to character 'A'-'F'
+      }
    }
-   for (int j = 1; j >= i; j--) printf ("0");   // Print leading zeros if necessary to ensure 8 - bit output
-   for (int j = i - 1; j >= 0; j--) printf ("%c", hexNum[j]);   // Print Hexadecimal in reverse order
+   else {
+      while (n > 0) {    // Convert positive integer to hexadecimal
+         int digit = n % 16;
+         if (digit < 10) hexDigits[hexIndex++] = digit + '0';
+         else hexDigits[hexIndex++] = digit - 10 + 'A';
+         n /= 16;
+      }
+      while (hexIndex < 8)  hexDigits[hexIndex++] = '0';   // Fill remaining digits with '0'
+      for (int i = 0; i < hexIndex / 2; i++) { // Reverse the array to get the correct hexadecimal representation
+         char temp = hexDigits[i];
+         hexDigits[i] = hexDigits[hexIndex - i - 1];
+         hexDigits[hexIndex - i - 1] = temp;
+      }
+   }
+   for (int i = 0; i < 8; i++) printf ("%c", hexDigits[i]);  // Print the hexadecimal digits
+   printf ("\n");
 }
 
 int main () {
@@ -40,10 +66,9 @@ int main () {
    while (1) {
       printf ("Input: ");
       result = scanf ("%d%c", &decimalNumber, &term);  // Read input and check for additional characters
-      if (result == 2 && ((term == '\n') || (term == ' '))) {
+      if (result == 2 && (term == '\n')) {
          printf ("HEX: ");
          DecToHexadecimal (decimalNumber);
-         printf ("\n");
          printf ("Binary: ");
          DecToBinary (decimalNumber);
          printf ("\n");
