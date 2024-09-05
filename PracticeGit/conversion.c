@@ -118,7 +118,7 @@ void RunInput () {
 }
 int main () {
    RunTestCases ();
-   printf ("Now you can enter your own integers for conversion:\n");
+   printf ("Now enter integers for conversion:\n");
    RunInput ();
 
    return 0;
