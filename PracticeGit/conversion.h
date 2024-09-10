@@ -9,6 +9,7 @@
 // conversion.h
 // Program on A3 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #ifndef CONVERSION_H
 #define CONVERSION_H
 
@@ -28,13 +29,10 @@ char ValueToHexChar (int value);
 /// <summary>Function to convert decimal to Hexadecimal.</summary>
 void DecToHexadecimal (char hexString[HEX_LENGTH + 1]);
 
-/// <summary>Print the binary representation.</summary>
-void PrintBinary (int n, const char formattedBinary[BITS / 8 * 9 + 1]);
+/// <summary>Function to process and print conversions for a given integer.</summary>
+void ProcessAndPrintConversions (long long inputNumber, char* formattedBinary, char* hexString);
 
-/// <summary>Print the hexadecimal string.</summary> 
-void PrintHexadecimal (int n, const char hexString[HEX_LENGTH]);
-
-/// <summary> Function to run test cases.</summary>
+/// <summary>Function to execute conversions either in test mode or interactive mode.</summary>
 void ExecuteConversions (int isTest);
 
 #endif CONVERSION_H

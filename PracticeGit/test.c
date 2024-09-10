@@ -5,6 +5,7 @@
 // test.c
 // Program on A3 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #pragma warning(disable:4996)
 #include <stdio.h>
 #include <limits.h>
@@ -18,12 +19,16 @@
 #define BLUE    "\033[1;34m"
 #define RESET   "\033[0m"
 
-void PrintBinary (int n, const char formattedBinary[BITS / 8 * 9 + 1]) {
-   printf ("Binary Equivalent for %d: % s\n", n, formattedBinary);
-}
-
-void PrintHexadecimal (int n, const char hexString[HEX_LENGTH]) {
-   printf ("Hexadecimal Equivalent for %d: % s\n", n, hexString);
+void ProcessAndPrintConversions (long long inputNumber, char* formattedBinary, char* hexString) {
+   if (inputNumber < INT_MIN || inputNumber > INT_MAX) printf ("Value out of range for a 32-bit signed integer. Try again.\n");
+   else {
+      int n = (int)inputNumber;
+      DecToBinary (n);
+      FormatBinary (formattedBinary);
+      DecToHexadecimal (hexString);
+      printf ("Binary Equivalent for %d: % s\n", n, formattedBinary);
+      printf ("Hexadecimal Equivalent for %d: % s\n", n, hexString);
+   }
 }
 
 void ExecuteConversions (int isTest) {
@@ -41,21 +46,17 @@ void ExecuteConversions (int isTest) {
           {-123, "11111111 11111111 11111111 10000101", "FFFFFF85"},
           {255, "00000000 00000000 00000000 11111111", "000000FF"},
           {100, "00000000 00000000 00000000 01100100", "00000064"},
+          {2147483649,"0000000000000000000000000000000010000000000000000000000000000001", "0000000080000001" }
       };
       char formattedBinary[BITS / 8 * 9 + 1];
       char hexString[HEX_LENGTH + 1];
       printf (BLUE "Executing Test Cases " RESET ":\n");
       for (int i = 0; i < sizeof (testCases) / sizeof (testCases[0]); i++) {
          long long inputNumber = testCases[i].input;
-         int decimalNumber = (int)inputNumber;
-         DecToBinary (decimalNumber);
-         FormatBinary (formattedBinary);
-         DecToHexadecimal (hexString);
+         printf ("Testing input: %lld\n", inputNumber);
+         ProcessAndPrintConversions (inputNumber, formattedBinary, hexString);
          int binaryPass = strcmp (formattedBinary, testCases[i].expectedBinary) == 0;
          int hexPass = strcmp (hexString, testCases[i].expectedHexadecimal) == 0;
-         printf ("Testing input: %lld\n", inputNumber);
-         PrintBinary (decimalNumber, formattedBinary);
-         PrintHexadecimal (decimalNumber, hexString);
          printf ("%s" RESET "\n", (binaryPass && hexPass) ? GREEN "PASS" : RED "FAIL");
          printf ("\n");
       }
@@ -67,16 +68,8 @@ void ExecuteConversions (int isTest) {
          printf ("Please enter an integer: ");
          int result = scanf ("%lld%c", &inputNumber, &term);
          if (result == 2 && (term == '\n')) {
-            if (inputNumber < INT_MIN || inputNumber > INT_MAX) printf ("Value out of range for a 32-bit signed integer. Try again.\n");
-            else {
-               int decimalNumber = (int)inputNumber;
-               DecToBinary (decimalNumber);
-               FormatBinary (formattedBinary);
-               DecToHexadecimal (hexString);
-               PrintBinary (decimalNumber, formattedBinary);
-               PrintHexadecimal (decimalNumber, hexString);
-               break;
-            }
+            ProcessAndPrintConversions (inputNumber, formattedBinary, hexString);
+            break;
          }
          else printf ("Invalid Integer, try again.\n");
          while (getchar () != '\n');  // To clear any remaining characters in the buffer
@@ -87,11 +80,7 @@ void ExecuteConversions (int isTest) {
 int main () {
    int choice;
    while (1) {
-      printf (YELLOW "Select option : "RESET" \n");
-      printf ("1. Execute test cases\n");
-      printf ("2. Provide input\n");
-      printf ("3. Exit\n");
-      printf ("Enter your choice (1, 2, or 3):");
+      printf (YELLOW "\nSelect option : "RESET" \n1. Execute test cases\n2. Provide input\n3. Exit\nEnter your choice (1, 2, or 3):");
       if (scanf ("%d", &choice) != 1) {
          while (getchar () != '\n');
          printf ("Invalid input, please enter a number.\n");
@@ -113,6 +102,5 @@ int main () {
          printf ("\n");
       }
    }
-
    return 0;
 }

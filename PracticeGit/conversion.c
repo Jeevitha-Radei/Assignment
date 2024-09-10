@@ -5,6 +5,7 @@
 // conversion.c
 // Program on A3 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 #include "conversion.h"
 
 int binary[BITS];   // Global array to hold binary representation
