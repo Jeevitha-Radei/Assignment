@@ -5,14 +5,13 @@
 // test.c
 // Program on A3 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 #pragma warning(disable:4996)
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
 #include "conversion.h"
 
-// Define color codes for terminal output
+// Defines color codes for terminal output
 #define RED     "\033[1;31m"
 #define GREEN   "\033[1;32m"
 #define YELLOW  "\033[1;33m"
@@ -23,15 +22,16 @@ void ProcessAndPrintConversions (long long inputNumber, char* formattedBinary, c
    if (inputNumber < INT_MIN || inputNumber > INT_MAX) printf ("Value out of range for a 32-bit signed integer. Try again.\n");
    else {
       int n = (int)inputNumber;
-      DecToBinary (n);
+      DecimalToBinary (n);
       FormatBinary (formattedBinary);
-      DecToHexadecimal (hexString);
+      DecimalToHexadecimal (hexString);
       printf ("Binary Equivalent for %d: % s\n", n, formattedBinary);
       printf ("Hexadecimal Equivalent for %d: % s\n", n, hexString);
    }
 }
 
 void ExecuteConversions (int isTest) {
+   char formattedBinary[BITS / 8 * 9 + 1], hexString[HEX_LENGTH + 1];
    if (isTest) {
       struct TestCase {
          long long input;
@@ -48,24 +48,21 @@ void ExecuteConversions (int isTest) {
           {100, "00000000 00000000 00000000 01100100", "00000064"},
           {2147483649,"0000000000000000000000000000000010000000000000000000000000000001", "0000000080000001" }
       };
-      char formattedBinary[BITS / 8 * 9 + 1];
-      char hexString[HEX_LENGTH + 1];
-      printf (BLUE "Executing Test Cases " RESET ":\n");
+      printf (BLUE "\nExecuting Test Cases " RESET ":\n");
       for (int i = 0; i < sizeof (testCases) / sizeof (testCases[0]); i++) {
          long long inputNumber = testCases[i].input;
          printf ("Testing input: %lld\n", inputNumber);
          ProcessAndPrintConversions (inputNumber, formattedBinary, hexString);
          int binaryPass = strcmp (formattedBinary, testCases[i].expectedBinary) == 0;
          int hexPass = strcmp (hexString, testCases[i].expectedHexadecimal) == 0;
-         printf ("%s" RESET "\n", (binaryPass && hexPass) ? GREEN "PASS" : RED "FAIL");
-         printf ("\n");
+         printf ("Test case: %s" RESET "\n\n", (binaryPass && hexPass) ? GREEN "PASS" : RED "FAIL");
       }
    }
    else {
       long long inputNumber;
-      char term, hexString[HEX_LENGTH + 1], formattedBinary[BITS / 8 * 9 + 1];
+      char term;
       while (1) {
-         printf ("Please enter an integer: ");
+         printf ("\nPlease enter an integer: ");
          int result = scanf ("%lld%c", &inputNumber, &term);
          if (result == 2 && (term == '\n')) {
             ProcessAndPrintConversions (inputNumber, formattedBinary, hexString);
@@ -91,7 +88,7 @@ int main () {
          ExecuteConversions (1);
          break;
       case 2:
-         printf (BLUE "Executing user input "RESET"\n");
+         printf (BLUE "\nExecuting user input "RESET"\n");
          ExecuteConversions (0);
          break;
       case 3:
@@ -99,7 +96,6 @@ int main () {
          return 0;
       default:
          printf ("Invalid choice. Please enter 1, 2, or 3.\n");
-         printf ("\n");
       }
    }
    return 0;
