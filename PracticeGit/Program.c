@@ -6,10 +6,11 @@
 // Program on A4 branch.
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <ctype.h>
+#include <limits.h>
 #include "Program.h"
 
 int PalindromeChecker (const char* str) {
-   if (str[0] == '-') return 0;  // Not a palindrome
+   if (str[0] == '-') return NOT_PALINDROME;
    char input[MAXLENGTH] = { 0 };
    int index = 0;
    for (int i = 0; str[i] != '\0' && index < MAXLENGTH - 1; i++) {
@@ -18,9 +19,9 @@ int PalindromeChecker (const char* str) {
    input[index] = '\0'; // Null-terminate the string
    int len = index; // Length of the input string
    for (int i = 0; i < len / 2; i++) {
-      if (input[i] != input[len - 1 - i]) return 0; 
+      if (input[i] != input[len - 1 - i]) return NOT_PALINDROME; 
    }
-   return 1; // Palindrome
+   return PALINDROME;
 }
 
 int ReverseInteger (int num, int* reverseResult) {

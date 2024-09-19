@@ -12,11 +12,11 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include <limits.h>
-
 #define MAXLENGTH 256
 #define SUCCESS 0
 #define OVERFLOW 1
+#define PALINDROME 2
+#define NOT_PALINDROME 3
 
 /// <summary>Check if a string is palindrome or not. </summary>
 int PalindromeChecker (const char* str);

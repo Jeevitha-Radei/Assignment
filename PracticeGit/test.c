@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "Program.h"
 
 #define RED     "\033[1;31m"
@@ -24,14 +25,16 @@ void PrintPalindromeTestCase (const char* testString, int result, int expectedRe
 void PrintIntegerReversalTestCase (int original, int reverseResult, int reversed, int expectedResults) {
    char reversedStr[12]; // Buffer for the reversed integer string
    snprintf (reversedStr, sizeof (reversedStr), "%d", reversed);
-   if (reverseResult == SUCCESS) printf ("| %-17d | %-25d | %-22s | %-20s|\n", original, reversed, PalindromeChecker (reversedStr) ? "Palindrome" : "Not a Palindrome", reversed == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
+   if (reverseResult == SUCCESS) printf ("| %-17d | %-25d | %-22s | %-20s|\n",
+      original, reversed, PalindromeChecker (reversedStr) ? "Palindrome" : "Not a Palindrome", reversed == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
    else printf ("| %-17d | %-25s | %-22s | %-20s|\n", original, "Overflow", "Invalid input", reversed == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
 }
 
 void ExecutePalindromeCases (int isTest) {
    if (isTest) {
-      const char* testStrings[] = { "Eva, can I stab bats in a cave?","Too bad, I hid a boot","Hey!! World", "No lemon, no melon","Malayalam","Her favorite number is 2", "Was it a car or a cat I saw?" };
-      int expectedResults[] = { 1, 1, 0, 1, 1, 0, 1 };
+      const char* testStrings[] = { "Eva, can I stab bats in a cave?","Too bad, I hid a boot","Hey!! World", "No lemon, no melon","Malayalam",
+                                    "Her favorite number is 2", "Was it a car or a cat I saw?" };
+      int expectedResults[] = { PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME };
       int numTestCases = sizeof (testStrings) / sizeof (testStrings[0]);
       printf ("\n                           EXECUTE PALINDROME TEST CASES \n");
       printf ("+------------------------------------------------------+-----------------------+----------+\n");
@@ -92,7 +95,6 @@ void ExecuteIntegerReversalCases (int isTest) {
          }
       }
       else printf (RED"Error reading input.\n"RESET);
-
    }
 }
 
