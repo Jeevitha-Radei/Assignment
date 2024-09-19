@@ -1,50 +1,38 @@
-#include <string.h>
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joiners at Metamation, Batch - July 2024.
+// Copyright (c) Metamation India.
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Program.c
+// Program on A4 branch.
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <ctype.h>
-#include <limits.h>
 #include "Program.h"
 
 int PalindromeChecker (const char* str) {
-   size_t left = 0;
-   size_t right = strlen (str) - 1;
-   while (left < right) {
-      if (!isalnum ((unsigned char)str[left])) left++;
-      else if (!isalnum ((unsigned char)str[right])) right--;
-      else {
-         if (tolower ((unsigned char)str[left]) != tolower ((unsigned char)str[right])) return 0;
-         left++;
-         right--;
-      }
+   if (str[0] == '-') return 0;  // Not a palindrome
+   char input[MAXLENGTH] = { 0 };
+   int index = 0;
+   for (int i = 0; str[i] != '\0' && index < MAXLENGTH - 1; i++) {
+      if (isalnum (str[i])) input[index++] = tolower (str[i]);  // Check if the character is alphanumeric
    }
-   if (str[0] == '-') return 0;
-   return 1;
+   input[index] = '\0'; // Null-terminate the string
+   int len = index; // Length of the input string
+   for (int i = 0; i < len / 2; i++) {
+      if (input[i] != input[len - 1 - i]) return 0; 
+   }
+   return 1; // Palindrome
 }
 
-int ReverseInteger (int num, int* overflow) {
+int ReverseInteger (int num, int* reverseResult) {
    int reversed = 0;
-   *overflow = 0; 
-   if (num < 0) {
-      num = -num;
-      while (num != 0) {
-         int digit = num % 10;
-         if (reversed > (INT_MAX - digit) / 10) {
-            *overflow = 1;
-            return 0; // Indicate overflow
-         }
-         reversed = reversed * 10 + digit;
-         num /= 10;
-      }
-      return -reversed;
+   int isNegative = (num < 0);
+   if (isNegative) num = -num;
+   while (num != 0) {
+      int digit = num % 10;
+      if (reversed > (INT_MAX - digit) / 10) return OVERFLOW;
+      reversed = reversed * 10 + digit;
+      num /= 10;
    }
-   else {
-      while (num != 0) {
-         int digit = num % 10;
-         if (reversed > (INT_MAX - digit) / 10) {
-            *overflow = 1;
-            return 0;
-         }
-         reversed = reversed * 10 + digit;
-         num /= 10;
-      }
-      return reversed;
-   }
+   *reverseResult = isNegative ? -reversed : reversed;
+   return SUCCESS;
 }

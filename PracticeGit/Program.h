@@ -12,19 +12,23 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
+#include <limits.h>
+
 #define MAXLENGTH 256
+#define SUCCESS 0
+#define OVERFLOW 1
 
 /// <summary>Check if a string is palindrome or not. </summary>
 int PalindromeChecker (const char* str);
 
 /// <summary>Function to reverse an integer. </summary>
-int ReverseInteger (int num, int* overflow);
+int ReverseInteger (int num, int* reverseResult);
 
 /// <summary>Print the palindrome test cases in tabular format. </summary>
-void PrintPalindromeTestCase (const char* testString, int result);
+void PrintPalindromeTestCase (const char* testString, int result, int expectedresults);
 
 /// <summary>Print the Integer Reversal test cases in tabular format. </summary>
-void PrintIntegerReversalTestCase (int original, int reversed, int overflow);
+void PrintIntegerReversalTestCase (int original, int reverseResult, int reversed, int expectedResults);
 
 ///  <summary>Execute Palindrome test cases. </summary>
 void ExecutePalindromeCases (int isTest);
