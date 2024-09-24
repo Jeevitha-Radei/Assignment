@@ -1,27 +1,32 @@
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 // Program.c
 // Program on A4 branch.
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 #include <ctype.h>
 #include <limits.h>
+#include <string.h>
 #include "Program.h"
 
-int PalindromeChecker (const char* str) {
-   if (str[0] == '-') return NOT_PALINDROME;
-   char input[MAXLENGTH] = { 0 };
-   int index = 0;
-   for (int i = 0; str[i] != '\0' && index < MAXLENGTH - 1; i++) {
-      if (isalnum (str[i])) input[index++] = tolower (str[i]);  // Check if the character is alphanumeric
+int IsPalindrome (const char* str) {
+   if (strlen (str) == 1) return PALINDROME;
+   int left, right = strlen (str) - 1;
+   int isValidString = 0;     // Flag to indicate if the string contains valid alphanumeric characters
+   for (left = 0; left < right;) {
+      if (!isalnum (str[left])) {
+         left++;
+         continue;
+      }
+      if (!isalnum (str[right])) {
+         right--;
+         continue;
+      }
+      isValidString = 1;    // Mark as a valid string when a valid character is found 
+      if (tolower (str[left++]) != tolower (str[right--])) return NOT_PALINDROME;
    }
-   input[index] = '\0'; // Null-terminate the string
-   int len = index; // Length of the input string
-   for (int i = 0; i < len / 2; i++) {
-      if (input[i] != input[len - 1 - i]) return NOT_PALINDROME; 
-   }
-   return PALINDROME;
+   return isValidString;   // Return 1 if valid, indicating it's a palindrome
 }
 
 int ReverseInteger (int num, int* reverseResult) {
@@ -34,6 +39,6 @@ int ReverseInteger (int num, int* reverseResult) {
       reversed = reversed * 10 + digit;
       num /= 10;
    }
-   *reverseResult = isNegative ? -reversed : reversed;
+   *reverseResult = isNegative ? -reversed : reversed;   // Store the result with the correct sign
    return SUCCESS;
 }

@@ -1,10 +1,10 @@
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // test.c
 // Program on A4 branch.
-// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
 #pragma warning(disable:4996)
 #include <stdio.h>
 #include <string.h>
@@ -18,84 +18,121 @@
 #define CYAN    "\033[1;36m"
 #define RESET   "\033[0m"
 
-void PrintPalindromeTestCase (const char* testString, int result, int expectedResults) {
-   printf ("| %-52s | %-21s | %-19s |\n", testString, result ? "Palindrome" : "Not a Palindrome", result == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
-}
+/// <summary>Execute palindrome test cases </summary>
+void RunPalindromeTest ();
 
-void PrintIntegerReversalTestCase (int original, int reverseResult, int reversed, int expectedResults) {
-   char reversedStr[12]; // Buffer for the reversed integer string
-   snprintf (reversedStr, sizeof (reversedStr), "%d", reversed);
-   if (reverseResult == SUCCESS) printf ("| %-17d | %-25d | %-22s | %-20s|\n",
-      original, reversed, PalindromeChecker (reversedStr) ? "Palindrome" : "Not a Palindrome", reversed == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
-   else printf ("| %-17d | %-25s | %-22s | %-20s|\n", original, "Overflow", "Invalid input", reversed == expectedResults ? GREEN"Pass"RESET : RED"Fail"RESET);
-}
+/// <summary>Execute Integer Reversal test cases </summary>
+void RunIntegerReversalTest ();
 
-void ExecutePalindromeCases (int isTest) {
-   if (isTest) {
-      const char* testStrings[] = { "Eva, can I stab bats in a cave?","Too bad, I hid a boot","Hey!! World", "No lemon, no melon","Malayalam",
-                                    "Her favorite number is 2", "Was it a car or a cat I saw?" };
-      int expectedResults[] = { PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME };
-      int numTestCases = sizeof (testStrings) / sizeof (testStrings[0]);
-      printf ("\n                           EXECUTE PALINDROME TEST CASES \n");
+/// <summary>Dynamically allocate a string from stdin </summary>
+char* DynamicStringInput ();
+
+///  <summary>Get user input for Palindrome checker </summary>
+void GetPalindromeInput ();
+
+///  <summary>Get user input for Integer reversal </summary>
+void GetIntegerInput ();
+
+void RunPalindromeTest () {
+   const char* testStrings[] = { "Eva, can I stab bats in a cave?","Too bad, I hid a boot","Hey!! World", "No lemon, no melon","Malayalam",
+                                 "Her favorite number is 2", "Was it a car or a cat I saw?" };
+   int expectedResults[] = { PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME, PALINDROME, NOT_PALINDROME, PALINDROME };
+   int numTestCases = sizeof (testStrings) / sizeof (testStrings[0]);
+   printf ("\n                           EXECUTE PALINDROME TEST CASES \n"
+      "+------------------------------------------------------+-----------------------+----------+ \n"
+      CYAN"|                      Test String                     |    Palindrome Check   |  Result  |\n"RESET
+      "+------------------------------------------------------+-----------------------+----------+\n");
+   for (int i = 0; i < numTestCases; i++) {
+      int result = IsPalindrome (testStrings[i]);
+      printf ("| %-52s | %-21s | %-19s |\n", testStrings[i], result == PALINDROME ? "Palindrome" : "Not a Palindrome", result == expectedResults[i] ? GREEN "Pass" RESET : RED "Fail" RESET);
       printf ("+------------------------------------------------------+-----------------------+----------+\n");
-      printf (CYAN"|                      Test String                     |    Palindrome Check   |  Result  |\n"RESET);
-      printf ("+------------------------------------------------------+-----------------------+----------+\n");
-      for (int i = 0; i < numTestCases; i++) {
-         int result = PalindromeChecker (testStrings[i]);
-         PrintPalindromeTestCase (testStrings[i], result, expectedResults[i]);
-         printf ("+------------------------------------------------------+-----------------------+----------+\n");
-      }
-   }
-   else {
-      char str[MAXLENGTH];
-      printf ("\nEnter a phrase or text: ");
-      if (fgets (str, MAXLENGTH, stdin) != NULL) {
-         str[strcspn (str, "\n")] = '\0';
-         if (strlen (str) == 0) printf ("Empty input is not a valid string.\n");
-         else {
-            int result = PalindromeChecker (str);
-            printf (result ? GREEN"Palindrome\n"RESET : RED"Not a palindrome\n"RESET);
-         }
-      }
-      else printf (RED"Error reading input.\n"RESET);
    }
 }
 
-void ExecuteIntegerReversalCases (int isTest) {
-   if (isTest) {
-      int testCases[] = { 78987, 159, -1234, 0, INT_MAX, INT_MIN, 22022022, -4567654 };
-      int expectedResults[] = { 78987, 951, -4321, 0, 0, 0, 22022022, -4567654 };
-      int numTestCases = sizeof (testCases) / sizeof (testCases[0]);
-      printf ("                   EXECUTE INTEGER REVERSAL TEST CASES\n");
+void RunIntegerReversalTest () {
+   int testCases[] = { 78987, 159, -1234, 0, INT_MAX, INT_MIN, 22022022, -4567654 };
+   int expectedResults[] = { 78987, 951, -4321, 0, 0, 0, 22022022, -4567654 };
+   int numTestCases = sizeof (testCases) / sizeof (testCases[0]);
+   printf ("\n                   EXECUTE INTEGER REVERSAL TEST CASES\n"
+      "\n+-------------------+---------------------------+------------------------+----------+\n"
+      CYAN"| Original Integer  | Reversed Integer          | Palindrome Check       |  Result  |\n"RESET
+      "+-------------------+---------------------------+------------------------+----------+\n");
+   for (int i = 0; i < numTestCases; i++) {
+      int reversed;
+      int result = ReverseInteger (testCases[i], &reversed);
+      char reversedStr[12]; // Buffer for the reversed integer string
+      snprintf (reversedStr, sizeof (reversedStr), "%d", reversed);
+      if (result == SUCCESS) printf ("| %-17d | %-25d | %-22s | %-20s|\n", testCases[i], reversed,
+         IsPalindrome (reversedStr) == PALINDROME ? "Palindrome" : "Not a Palindrome", reversed == expectedResults[i] ? GREEN "Pass" RESET : RED "Fail" RESET);
+      else printf ("| %-17d | %-25s | %-22s | %-20s|\n", testCases[i], "Overflow", "Invalid input", reversed == expectedResults[i] ? GREEN "Pass" RESET : RED "Fail" RESET);
       printf ("+-------------------+---------------------------+------------------------+----------+\n");
-      printf (CYAN"| Original Integer  | Reversed Integer          | Palindrome Check       |  Result  |\n"RESET);
-      printf ("+-------------------+---------------------------+------------------------+----------+\n");
-      for (int i = 0; i < numTestCases; i++) {
-         int reversed;
-         int result = ReverseInteger (testCases[i], &reversed);
-         PrintIntegerReversalTestCase (testCases[i], result, reversed, expectedResults[i]);
-         printf ("+-------------------+---------------------------+------------------------+----------+\n");
-      }
    }
-   else {
-      char input[MAXLENGTH];
-      printf ("\nEnter an integer to reverse: ");
-      if (fgets (input, sizeof (input), stdin) != NULL) {
-         char* endPtr = NULL;
-         long int number = strtol (input, &endPtr, 10);
-         if (endPtr == input || *endPtr != '\0' && *endPtr != '\n') printf (YELLOW"Invalid input.\n"RESET);
-         else {
-            int reversed, reverseResult = ReverseInteger ((int)number, &reversed);
-            if (reverseResult == SUCCESS) {
-               char reversedStr[12];
-               snprintf (reversedStr, sizeof (reversedStr), "%d", reversed);
-               printf ("Reversed Integer: %d\n%s", reversed, PalindromeChecker (reversedStr) ? GREEN"Palindrome\n"RESET : RED"Not a palindrome\n"RESET);
-            }
-            else printf ("Reversed Integer: Overflow\n"YELLOW"Invalid input\n"RESET);
+}
+
+// Dynamically reads a line of input from stdin and returns it as a null-terminated string.
+// Handles memory allocation and failures, doubling strategy for resizing the string.
+char* DynamicStringInput () {
+   char* str = NULL, c;
+   int size = 1;
+   str = malloc (size * sizeof (char));
+   if (!str) {
+      perror ("Failed to allocate memory");
+      return NULL;
+   }
+   int i = 0;
+   while ((c = getc (stdin)) != '\n' && c != EOF) {
+      str[i++] = c;
+      if (i >= size) {
+         size *= 2; // Double the size
+         char* temp = realloc (str, size * sizeof (char));
+         if (!temp) {
+            free (str);
+            perror ("Failed to reallocate memory");
+            return NULL;
          }
+         str = temp;
       }
-      else printf (RED"Error reading input.\n"RESET);
    }
+   str[i] = '\0';
+   return str;
+}
+
+void GetPalindromeInput () {
+   printf ("\nEnter a phrase or text: ");
+   char* str = DynamicStringInput ();
+   if (str == NULL || strlen (str) == 0) {
+      printf (YELLOW "Empty input is not a valid string.\n" RESET);
+      free (str);
+      return;
+   }
+   int result = IsPalindrome (str);
+   printf (result == PALINDROME ? GREEN "Palindrome\n" RESET : RED "Not a palindrome\n" RESET);
+   free (str);
+}
+
+void GetIntegerInput () {
+   printf ("\nEnter an integer to reverse: ");
+   char* input = DynamicStringInput ();
+   if (input == NULL || strlen (input) == 0) {
+      printf (YELLOW "Invalid input.\n" RESET);
+      return;
+   }
+   char* endPtr = NULL;
+   long int number = strtol (input, &endPtr, 10);
+   if (endPtr == input || (*endPtr != '\0' && *endPtr != '\n')) {
+      printf (YELLOW "Invalid input.\n" RESET);
+      free (input);
+      return;
+   }
+   int reversed, reverseResult = ReverseInteger ((int)number, &reversed);
+   if (reverseResult != SUCCESS) {
+      printf ("Reversed Integer: Overflow\n" YELLOW "Invalid input\n" RESET);
+      free (input);
+      return;
+   }
+   if (number < 0) printf ("Reversed Integer: %d\n" RED "Not a palindrome\n" RESET, reversed);
+   else  printf ("Reversed Integer: %d\n%s", reversed, IsPalindrome (input) == PALINDROME ? GREEN "Palindrome\n" RESET : RED "Not a palindrome\n" RESET);
+   free (input);
 }
 
 int main () {
@@ -103,22 +140,26 @@ int main () {
    while (1) {
       printf ("\nSelect option:\n1. Execute test cases\n2. Enter a phrase or text\n3. Enter an integer to reverse\n4. Exit\nEnter your choice (1, 2, 3, or 4): ");
       fgets (choiceStr, sizeof (choiceStr), stdin);
-      int choice = atoi (choiceStr);
-      switch (choice) {
-      case 1:
-         ExecutePalindromeCases (1);
-         ExecuteIntegerReversalCases (1);
-         break;
-      case 2:
-         ExecutePalindromeCases (0);
-         break;
-      case 3:
-         ExecuteIntegerReversalCases (0);
-         break;
-      case 4:
-         printf ("Exiting the program.\n");
-         return 0;
-      default:
+      char* endPtr;
+      long choice = strtol (choiceStr, &endPtr, 10);
+      if (endPtr != choiceStr && *endPtr == '\n' && choice >= 1 && choice <= 4) {
+         switch (choice) {
+         case 1:
+            RunPalindromeTest ();
+            RunIntegerReversalTest ();
+            break;
+         case 2:
+            GetPalindromeInput ();
+            break;
+         case 3:
+            GetIntegerInput ();
+            break;
+         case 4:
+            printf ("\nExiting the program.\n");
+            return 0;
+         }
+      }
+      else {
          while (getchar () != '\n');  // Discard any leftover characters
          printf ("Invalid choice. Please enter 1, 2, 3, or 4.\n");
       }
