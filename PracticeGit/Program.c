@@ -11,10 +11,8 @@
 #include "Program.h"
 
 int IsPalindrome (const char* str) {
-   if (strlen (str) == 1) return PALINDROME;
-   int left, right = strlen (str) - 1;
-   int isValidString = 0;     // Flag to indicate if the string contains valid alphanumeric characters
-   for (left = 0; left < right;) {
+   int left = 0, right = (int)strlen (str) - 1, isValidString = 0;     // Flag to indicate if the string contains valid alphanumeric characters
+   while (left <= right) {
       if (!isalnum (str[left])) {
          left++;
          continue;
@@ -30,9 +28,8 @@ int IsPalindrome (const char* str) {
 }
 
 int ReverseInteger (int num, int* reverseResult) {
-   int reversed = 0;
-   int isNegative = (num < 0);
-   if (isNegative) num = -num;
+   int reversed = 0, isNegative = 0;
+   if (num < 0) { isNegative = 1; num = -num; }
    while (num != 0) {
       int digit = num % 10;
       if (reversed > (INT_MAX - digit) / 10) return OVERFLOW;
