@@ -6,22 +6,24 @@
 // -----------------------------------------------------------------------------------------------
 // Palindrome Checker - Program to check whether the word is Palindrome or not.
 // -----------------------------------------------------------------------------------------------
-// Program.h
-// Program on A4 branch.
+// Program.h - Function declarations
 // -----------------------------------------------------------------------------------------------
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#define MAXLENGTH 256
-#define SUCCESS 0
+#define MAXLENGTH 100
+#define SUCCESS 2
 #define OVERFLOW -2
 #define PALINDROME 1
-#define NOT_PALINDROME -1
+#define NOT_PALINDROME 0
 
-/// <summary>Check if a string is palindrome or not. </summary>
-int IsPalindrome (const char* str);
+/// <summary>Returns true if palindrome else false for strings. </summary>
+int IsPalindrome_s (const char* str);
 
 /// <summary>Function to reverse an integer. </summary>
 int ReverseInteger (int num, int* reverseResult);
+
+/// <summary>Returns true if palindrome else false for integers. </summary>
+int IsPalindrome_d (int num, int reversed);
 
 #endif PROGRAM_H

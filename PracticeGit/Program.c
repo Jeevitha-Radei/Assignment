@@ -2,16 +2,15 @@
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // -----------------------------------------------------------------------------------------------
-// Program.c
-// Program on A4 branch.
+// Program.c - Function handles palindrome checking for strings & integers, along with integer reversal.
 // -----------------------------------------------------------------------------------------------
 #include <ctype.h>
 #include <limits.h>
 #include <string.h>
 #include "Program.h"
 
-int IsPalindrome (const char* str) {
-   int left = 0, right = (int)strlen (str) - 1, isValidString = 0;     // Flag to indicate if the string contains valid alphanumeric characters
+int IsPalindrome_s (const char* str) {
+   int left = 0, right = (int)strlen (str) - 1, isValidString = 0;
    while (left <= right) {
       if (!isalnum (str[left])) {
          left++;
@@ -21,10 +20,10 @@ int IsPalindrome (const char* str) {
          right--;
          continue;
       }
-      isValidString = 1;    // Mark as a valid string when a valid character is found 
+      isValidString = 1;
       if (tolower (str[left++]) != tolower (str[right--])) return NOT_PALINDROME;
    }
-   return isValidString;   // Return 1 if valid, indicating it's a palindrome
+   return isValidString;
 }
 
 int ReverseInteger (int num, int* reverseResult) {
@@ -38,4 +37,8 @@ int ReverseInteger (int num, int* reverseResult) {
    }
    *reverseResult = isNegative ? -reversed : reversed;   // Store the result with the correct sign
    return SUCCESS;
+}
+
+int IsPalindrome_d (int num, int reversed) {
+   return (num >= 0 && num == reversed) ? PALINDROME : NOT_PALINDROME;
 }
