@@ -5,10 +5,11 @@
 // test.c -  Program that Executes test cases and checks the user input for sort & search.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
-#include <string.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #define MAXSIZE 10
+#define ELEMENT_NOT_FOUND -1
 #define RED     "\033[1;31m"
 #define GREEN   "\033[1;32m"
 #define RESET   "\033[0m"
@@ -22,13 +23,22 @@ void RunQuickSortTest ();
 /// <summary> Gets user input for an array, sorts it, and performs a binary search. </summary>
 void GetUserInput ();
 
+/// <summary>Compare Arrays returns true or false. </summary>
+bool ArraysEqual (int arr1[], int arr2[], int size);
+
 typedef struct {
-   int array[MAXSIZE];
-   int size;
+   int array[MAXSIZE], size;
 } TestCase;
 
 void PrintArray (int array[], int size) {
-   for (int i = 0; i < size; i++) printf ("%5d", array[i]);
+   for (int i = 0; i < size; i++) printf ("%4d", array[i]);
+}
+
+bool ArraysEqual (int arr1[], int arr2[], int size) {
+   for (int i = 0; i < size; i++) {
+      if (arr1[i] != arr2[i]) return false;
+   }
+   return true;
 }
 
 void RunQuickSortTest () {
@@ -54,25 +64,33 @@ void RunQuickSortTest () {
        {22, 32, 35, 39, 46, 54, 55},
        {11, 12, 13, 14, 15, 16}
    };
-   for (int i = 0; i < 9; i++) {
-      int n = testCases[i].size;
-      int currentTest[MAXSIZE] = { 0 };
-      memcpy (currentTest, testCases[i].array, n * sizeof (int));
-      printf ("\nTestcase %d\nUnsorted array: ", i + 1);
-      PrintArray (testCases[i].array, n);
-      QuickSort (currentTest, 0, n - 1);
-      printf ("\nSorted array:   ");
-      PrintArray (currentTest, n);
-      const char* result = (memcmp (currentTest, expectedResults[i], n * sizeof (int)) == 0) ? GREEN"Pass"RESET : RED"Fail"RESET;
-      printf ("\nResult: %s\n", result);
+   int elementSearch[] = { 11, 1, 0, -1, 2, 6, 36, 53, 11 };
+   int testCount = sizeof (testCases) / sizeof (testCases[0]);
+   printf ("+------------------+------------------------------------------+------------------+-----------------------+---------+\n"
+      "|    Input         |               Output                     | Element to Search |    Element found     |   Result |\n"
+      "+------------------+------------------------------------------+------------------+-----------------------+---------+\n");
+   for (int i = 0; i < testCount; i++) {
+      int size = testCases[i].size, * arrayToSort = testCases[i].array;
+      printf ("| Unsorted Array   | ");
+      PrintArray (arrayToSort, size);
+      printf ("%*s| ", (MAXSIZE - size) * 4, " ");
+      int searchValue = elementSearch[i];
+      QuickSort (arrayToSort, 0, size - 1);
+      int foundIndex = BinarySearch (arrayToSort, size, searchValue);
+      printf ("%-18d| %-9s at index %-2d | ", searchValue, (foundIndex != ELEMENT_NOT_FOUND) ? "found" : "not found", 
+         (foundIndex != ELEMENT_NOT_FOUND) ? foundIndex : -1);
+      printf ("%-8s|\n", ArraysEqual (arrayToSort, expectedResults[i], size) ? " "GREEN" Pass "RESET" ": " "RED" Fail "RESET" ");
+      printf ("| Sorted Array     | ");
+      PrintArray (arrayToSort, size);
+      printf ("%*s| ", (MAXSIZE - size) * 4, " ");
+      printf ("\n+------------------+------------------------------------------+------------------+----------------------+---------+\n");
    }
 }
 
 void GetUserInput () {
-   int array[MAXSIZE];
-   int size;
+   int array[MAXSIZE], size;
    char input[256];
-   printf ("Enter the number of elements: ");
+   printf ("Enter the number of elements (1 to %d): ", MAXSIZE);
    fgets (input, sizeof (input), stdin);
    size = atoi (input);
    if (size < 1 || size > MAXSIZE) {
@@ -81,13 +99,18 @@ void GetUserInput () {
    }
    printf ("Enter %d integers:\n", size);
    for (int i = 0; i < size; i++) {
-      fgets (input, sizeof (input), stdin);
-      array[i] = atoi (input);
+      while (true) {
+         fgets (input, sizeof (input), stdin);
+         char* endptr;
+         array[i] = strtol (input, &endptr, 10);
+         if (endptr != input && *endptr == '\n')  break; 
+         printf ("Invalid input. Please enter an integer: ");
+      }
    }
    printf ("Unsorted Array: ");
    PrintArray (array, size);
    QuickSort (array, 0, size - 1);
-   printf ("\nSorted Array:   ");
+   printf ("\nSorted Array: ");
    PrintArray (array, size);
    int target;
    printf ("\nEnter the element to search for: ");
@@ -98,17 +121,12 @@ void GetUserInput () {
 }
 
 int main () {
-   char choiceStr[3];
-   while (1) {
-      printf ("\nSelect option:\n1. Executing test cases\n2. Enter an array of integers to sort and search\n3. Exit\nEnter your choice (1, 2, or 3): ");
-      fgets (choiceStr, sizeof (choiceStr), stdin);
-      char* endPtr;
-      long choice = strtol (choiceStr, &endPtr, 10);
-      if (endPtr == choiceStr || *endPtr != '\n' || choice < 1 || choice > 3) {
-         printf ("Invalid choice. Please enter 1, 2, or 3.\n");
-         while (getchar () != '\n');  // Clear the input buffer
-         continue;
-      }
+   int choice;
+   do {
+      printf ("\nSelect Option:\n1. Run QuickSort Test Cases\n2. Get User Input for Sorting and Searching\n3. Exit\nEnter your choice: ");
+      char input[256];
+      fgets (input, sizeof (input), stdin);
+      choice = atoi (input);
       switch (choice) {
       case 1:
          RunQuickSortTest ();
@@ -117,9 +135,11 @@ int main () {
          GetUserInput ();
          break;
       case 3:
-         printf ("Exiting the program.\n");
-         return 0;
+         printf ("Exiting...\n");
+         break;
+      default:
+         printf ("Invalid choice. Please try again.\n");
       }
-   }
+   } while (choice != 3);
    return 0;
 }

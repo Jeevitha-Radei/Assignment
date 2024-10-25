@@ -7,6 +7,8 @@
 
 #include "Program.h"
 
+#define ELEMENT_NOT_FOUND -1
+
 void Swap (int* a, int* b) {
    int t = *a;
    *a = *b;
@@ -16,10 +18,7 @@ void Swap (int* a, int* b) {
 int Partition (int array[], int left, int right) {
    int pivot = array[right], i = (left - 1);
    for (int j = left; j < right; j++) {
-      if (array[j] <= pivot) {
-         i++;
-         Swap (&array[i], &array[j]);
-      }
+      if (array[j] <= pivot) Swap (&array[++i], &array[j]);
    }
    Swap (&array[i + 1], &array[right]);
    return (i + 1);
@@ -36,10 +35,10 @@ void QuickSort (int array[], int left, int right) {
 int BinarySearch (int array[], int size, int target) {
    int left = 0, right = size - 1;
    while (left <= right) {
-      int mid = (left + right) / 2;
-      if (array[mid] == target) return mid;
-      if (array[mid] < target) left = mid + 1;
+      int mid = (left + right) / 2, midValue = array[mid];
+      if (midValue == target) return mid;
+      if (midValue < target) left = mid + 1;
       else right = mid - 1;
    }
-   return -1; // Element not found
+   return ELEMENT_NOT_FOUND;
 }
