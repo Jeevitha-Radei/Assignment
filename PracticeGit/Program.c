@@ -41,4 +41,3 @@ int ReverseInteger (int num, int* reverseResult) {
 
 int IsPalindrome_d (int num, int reversed) {
    return (num >= 0 && num == reversed) ? PALINDROME : NOT_PALINDROME;
-}
