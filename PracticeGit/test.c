@@ -55,7 +55,7 @@ void RunIntegerReversalTest () {
       int reversed, result = ReverseInteger (testCases[i], &reversed);
       char reversedStr[12];    // Buffer for the reversed integer string
       snprintf (reversedStr, sizeof (reversedStr), "%d", reversed);
-      char* isPalindrome = IsPalindrome_d (testCases[i], reversed) ? "Palindrome" : "Not a palindrome";
+      char* isPalindrome = IsPalindrome_d (testCases[i]) ? "Palindrome" : "Not a palindrome";
       char* testResult = reversed == expectedResults[i] ? GREEN "Pass" RESET : RED "Fail" RESET;
       printf ("| %-17d | %-25s | %-22s | %-20s|\n", testCases[i], (result == SUCCESS) ? reversedStr : "Overflow", (result == SUCCESS) ? isPalindrome : "Invalid Input", testResult);
       printf ("+-------------------+---------------------------+------------------------+----------+\n");
@@ -71,6 +71,7 @@ void GetPalindromeInput () {
    }
    printf (IsPalindrome_s (str) == PALINDROME ? GREEN "Palindrome\n"RESET : RED"Not a palindrome\n"RESET);
 }
+
 void GetIntegerInput () {
    char input[MAXLENGTH];
    printf ("\nEnter an integer to reverse: ");
@@ -80,7 +81,7 @@ void GetIntegerInput () {
    }
    char* endPtr;
    long int number = strtol (input, &endPtr, 10);
-   if (endPtr == input || (*endPtr != '\n' && *endPtr != '\0')) {
+   if (endPtr == input || (*endPtr != '\n' && *endPtr != '\0') || number < INT_MIN || number > INT_MAX) {
       printf ("Invalid input.\n");
       return;
    }
@@ -89,8 +90,7 @@ void GetIntegerInput () {
       printf ("Reversed Integer: Overflow\nInvalid input\n");
       return;
    }
-   printf ("Reversed Integer: %d\n", reversed);
-   printf (IsPalindrome_d ((int)number, reversed) == PALINDROME ? GREEN "Palindrome\n" RESET : RED "Not a palindrome\n" RESET);
+   printf ("Reversed Integer: %d\n%s", reversed, IsPalindrome_d ((int)number) ? GREEN "Palindrome\n" RESET : RED "Not a palindrome\n" RESET);
 }
 
 int main () {

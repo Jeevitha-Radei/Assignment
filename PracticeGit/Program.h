@@ -24,6 +24,6 @@ int IsPalindrome_s (const char* str);
 int ReverseInteger (int num, int* reverseResult);
 
 /// <summary>Returns true if palindrome else false for integers. </summary>
-int IsPalindrome_d (int num, int reversed);
+int IsPalindrome_d (int num);
 
 #endif PROGRAM_H

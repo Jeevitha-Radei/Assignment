@@ -39,5 +39,8 @@ int ReverseInteger (int num, int* reverseResult) {
    return SUCCESS;
 }
 
-int IsPalindrome_d (int num, int reversed) {
+int IsPalindrome_d (int num) {
+   int reversed, result = ReverseInteger (num, &reversed);
+   if (result == OVERFLOW) return OVERFLOW;
    return (num >= 0 && num == reversed) ? PALINDROME : NOT_PALINDROME;
+}
