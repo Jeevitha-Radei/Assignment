@@ -20,7 +20,7 @@
 /// <summary>Returns true if palindrome else false for strings. </summary>
 int IsPalindrome_s (const char* str);
 
-/// <summary>Function to reverse an integer. </summary>
+/// <summary>Stores reverse value of input in int* reverseInteger. Returns 1 if successful. </summary>
 int ReverseInteger (int num, int* reverseResult);
 
 /// <summary>Returns true if palindrome else false for integers. </summary>
