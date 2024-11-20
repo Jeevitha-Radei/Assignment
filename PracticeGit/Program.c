@@ -10,17 +10,16 @@
 
 void Swap (int* a, int* b) {
    if (a != b) {   // swap only if it is in diferent addresses
-      *a = *a ^ *b;
-      *b = *a ^ *b;
-      *a = *a ^ *b;
+      *a = *a + *b;
+      *b = *a - *b;
+      *a = *a - *b;
    }
 }
 
 int Partition (int array[], int left, int right) {
    int pivot = array[right], i = (left - 1);   // Select the last element as pivot
-   for (int j = left; j < right; j++) {
+   for (int j = left; j < right; j++)
       if (array[j] <= pivot) Swap (&array[++i], &array[j]);
-   }
    Swap (&array[i + 1], &array[right]);   // Place the pivot in its correct position
    return (i + 1);
 }
