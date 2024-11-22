@@ -8,6 +8,6 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-void PrintMessage ();         
+void displayBoard (char Board[3][3]);
 
 #endif

@@ -8,6 +8,7 @@
 #include "Program.h"
 
 int main () {
-   PrintMessage ();
+   char board[3][3];
+   displayBoard (board);
    return 0;
 }
