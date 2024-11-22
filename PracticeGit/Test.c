@@ -5,9 +5,9 @@
 // test.c
 // ------------------------------------------------------------------------------------------------
 
-#include "Program.h"
-
-int main () {
-   PrintMessage ();
-   return 0;
-}
+//#include "Program.h"
+//
+//int main () {
+//   PrintMessage ();
+//   return 0;
+//}
