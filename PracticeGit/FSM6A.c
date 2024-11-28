@@ -9,6 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
+/// State diagram reference: file://C:/Work/Training24/PracticeGit/Assignment6A.jpg
 typedef enum {
    S0,  // Initial state
    S1,  // '0'
