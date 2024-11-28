@@ -2,12 +2,13 @@
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// Program.h
+// Cash.h
 // ------------------------------------------------------------------------------------------------
 
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#ifndef CASH_H
+#define CASH_H
 
-void PrintMessage ();         
+/// <summary>Generate the changes for the given amount.</summary>
+void calculateChange (int cashPaid, int actualAmount, int* change, int* coinCount);
 
 #endif
