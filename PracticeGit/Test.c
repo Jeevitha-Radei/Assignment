@@ -73,7 +73,7 @@ void RunQuickSortTest () {
       printf ("%*s|", (MAXSIZE - size) * 3, " ");
       int searchValue = elementSearch[i];   // Element to search for in the current test case
       QuickSort (arrayToSort, 0, size - 1);
-      int foundIndex = BinarySearch (arrayToSort, size, searchValue);
+      int foundIndex = GetIndex (arrayToSort, size, searchValue);
       if (foundIndex == ELEMENT_NOT_FOUND) printf ("    %-11d|    Not Found     |", searchValue);
       else printf ("    %-11d| Found at index %-d |", searchValue, foundIndex);
       printf ("  %-8s  |\n", AreArraysEqual (arrayToSort, expectedResults[i], size, size) ? GREEN"Pass"RESET : RED"Fail"RESET);
@@ -83,28 +83,29 @@ void RunQuickSortTest () {
       printf ("\n+--------------------------------------------------+---------------+------------------+--------+\n");
    }
 }
-
 void GetUserInput () {
    int array[MAXSIZE], size;
-   char input[256];
-   printf ("Enter the number of elements (1 to %d): ", MAXSIZE);
-   fgets (input, sizeof (input), stdin);
-   char* endptr;
-   size = strtol (input, &endptr, 10);   // Convert input to integer
-   if (*endptr != '\n' && *endptr != '\0') {
-      printf ("Invalid input. Please enter a valid integer.\n");
-      return;
-   }
-   if (size < 1 || size > MAXSIZE) {
-      printf ("Invalid number of elements. Please enter a value between 1 and %d.\n", MAXSIZE);
-      return;
+   char input[256], * endptr;
+   while (1) {
+      printf ("Enter the number of elements (1 to %d): ", MAXSIZE);
+      fgets (input, sizeof (input), stdin);
+      size = strtol (input, &endptr, 10);   // Convert input to integer
+      if (*endptr != '\n' && *endptr != '\0') {
+         printf ("Invalid input. Please enter a valid integer.\n");
+         continue;
+      }
+      if (size < 1 || size > MAXSIZE) {
+         printf ("Invalid number of elements. Please enter a value between 1 and %d.\n", MAXSIZE);
+         continue;
+      }
+      break;
    }
    printf ("Enter %d integers:\n", size);
    for (int i = 0; i < size; i++) {
       while (1) {
          fgets (input, sizeof (input), stdin);
          array[i] = strtol (input, &endptr, 10);
-         if (*endptr == '\n' || *endptr == '\0') break;
+         if (*endptr == '\n' || *endptr == '\0') break;  // Valid input
          printf ("Invalid input. Please enter an integer: ");
       }
    }
@@ -121,7 +122,7 @@ void GetUserInput () {
       printf ("Invalid input. Please enter a valid integer.\n");
       return;
    }
-   int result = BinarySearch (array, size, target);
+   int result = GetIndex (array, size, target);
    printf (result == ELEMENT_NOT_FOUND ? "Element %d not found.\n" : "Element %d found at index %d.\n", target, result);
 }
 

@@ -16,29 +16,33 @@ void Swap (int* a, int* b) {
    }
 }
 
-int Partition (int array[], int left, int right) {
-   int pivot = array[right], i = (left - 1);   // Select the last element as pivot
-   for (int j = left; j < right; j++)
-      if (array[j] <= pivot) Swap (&array[++i], &array[j]);
-   Swap (&array[i + 1], &array[right]);   // Place the pivot in its correct position
-   return (i + 1);
-}
-
 void QuickSort (int array[], int left, int right) {
    if (left < right) {
-      int pi = Partition (array, left, right);
+      int pivot = array[right];   // Select the pivot element (last element in the array)
+      int i = left - 1;
+      for (int j = left; j < right; j++) {
+         if (array[j] <= pivot) { 
+            i++;
+            Swap (&array[i], &array[j]);
+         }
+      }
+      Swap (&array[i + 1], &array[right]);
+      int pi = i + 1;   // Partition the array and sort the subarrays recursively
       QuickSort (array, left, pi - 1);
       QuickSort (array, pi + 1, right);
    }
 }
 
-int BinarySearch (int array[], int size, int target) {
-   int left = 0, right = size - 1;
+int GetIndex (int array[], int size, int target) {
+   int left = 0, right = size - 1, result = ELEMENT_NOT_FOUND;;
    while (left <= right) {
-      int mid = (left + right) / 2, midValue = array[mid];   // Get the value at the middle index
-      if (midValue == target) return mid;
-      if (midValue < target) left = mid + 1;
+      int mid = (left + right) / 2;
+      if (array[mid] == target) {
+         result = mid;  // Store the index when we find the target
+         right = mid - 1;  // Continue searching on the left side to find the first occurrence
+      }
+      else if (array[mid] < target) left = mid + 1;
       else right = mid - 1;
    }
-   return ELEMENT_NOT_FOUND;
+   return result;
 }

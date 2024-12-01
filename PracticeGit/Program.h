@@ -12,16 +12,13 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-/// <summary> Function to swap elements.</summary>
+/// <summary>Function to swap elements.</summary>
 void Swap (int* a, int* b);
 
-/// <summary> Function to find the partition position.</summary>
-int Partition (int array[], int left, int right);
-
-/// <summary> Function to perform the QuickSort algorithm. </summary>
+/// <summary>Function to perform the QuickSort algorithm.</summary>
 void QuickSort (int array[], int left, int right);
 
-/// <summary> Function to perform a binary search on a sorted array. </summary>
-int BinarySearch (int array[], int size, int target);
+/// <summary>Finds the index of a target element in a sorted array.</summary>
+int GetIndex (int array[], int size, int target);
 
 #endif
