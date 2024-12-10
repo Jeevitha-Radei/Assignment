@@ -21,37 +21,19 @@ typedef enum {
 } State;
 
 ///<summary> Function to get the next state and output based on the current state and input. </summary>
-State mealyState (State currentState, int input, int* output);
+State MealyState (State currentState, int input, int* output);
 
-State mealyState (State currentState, int input, int* output) {
+State MealyState (State currentState, int input, int* output) {
    switch (currentState) {
    case S0:
-      if (input == 0) {
-         *output = 0;
-         return S1;   // Transition to S1 after '0'
-      }
-      else {
-         *output = 0;
-         return S6;   // Transition to S6 if input is '1'
-      }
+      *output = 0;
+      return (input == 0) ? S1 : S6;   // Transition to S1 else S6
    case S1:
-      if (input == 1) {
-         *output = 0;
-         return S2;   // Transition to S2 after '01'
-      }
-      else {
-         *output = 0;
-         return S1;   // Stay in S1 if input is '0'
-      }
+      *output = 0;
+      return(input == 1) ? S2 : S1;   // Transition to S2 after '01' else S1
    case S2:
-      if (input == 1) {
-         *output = 0;
-         return S3;   // Transitions to S3 after '011'
-      }
-      else {
-         *output = 0;
-         return S1;   // Return to S1 if input is '0'
-      }
+      *output = 0;
+      return (input == 1) ? S3 : S1;   // Transitions to S3 after '011'
    case S3:
       if (input == 0) {
          *output = 1;   // output '1' upon seeing '0110'
@@ -71,14 +53,8 @@ State mealyState (State currentState, int input, int* output) {
          return S1;   // Return to S1 if input is '0'
       }
    case S5:
-      if (input == 0) {
-         *output = 0;
-         return S4;   // Transition to S4
-      }
-      else {
-         *output = 0;
-         return S5;   // Stay in S5 if input is '1'
-      }
+      *output = 0;
+      return(input == 0) ? S4 : S5;   // Transition to S4 else stay in S5
    case S6:
       *output = 0;   // Output '0' and transition to S1 if '0' or S5 if '1'
       return (input == 0) ? S1 : S5;
@@ -95,13 +71,8 @@ int main (int argc, char* argv[]) {
    int output = 0;
    FILE* inputFile = fopen (argv[1], "r");
    FILE* outputFile = fopen (argv[2], "w");
-   if (inputFile == NULL) {
-      perror ("Error opening input file");
-      return 1;
-   }
-   if (outputFile == NULL) {
-      perror ("Error opening output file");
-      fclose (inputFile);
+   if (inputFile == NULL|| outputFile==NULL) {
+      perror ("Error opening the file");
       return 1;
    }
    char inputChar;
@@ -109,7 +80,7 @@ int main (int argc, char* argv[]) {
    while (fscanf (inputFile, "%c", &inputChar) == 1) {
       if (inputChar == '0' || inputChar == '1') {   // Ignore any non '0' or '1' characters (such as newlines, spaces)
          int input = inputChar - '0';   // Convert '0'/'1' char to integer 0/1
-         currentState = mealyState (currentState, input, &output);
+         currentState = MealyState (currentState, input, &output);
          fprintf (outputFile, "%d", output);
       }
    }

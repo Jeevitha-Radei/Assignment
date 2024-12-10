@@ -5,7 +5,7 @@
 // FSMtest.c
 // -----------------------------------------------------------------------------------------------
 
-#define _CRT_SECURE_NO_WARNINGS  1
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <windows.h>
 #include <stdio.h>
 #include <malloc.h>
@@ -47,22 +47,15 @@ int compareFiles (const char* file1, const char* file2) {
    printf ("Comparing files: %s and %s\n", file1, file2);
    FILE* f1 = fopen (file1, "r");
    FILE* f2 = fopen (file2, "r");
-   if (f1 == NULL || f2 == NULL) {
+   if (!f1 || !f2) {
       printf ("Error: One or more files could not be opened.\n");
       return 0;
    }
-   char ch1, ch2;
    int bitNum = 1;
    while (1) {
-      int read1 = fgetc (f1);
-      int read2 = fgetc (f2);
-      if (read1 == EOF || read2 == EOF) {    // If either file has ended, break out of the loop
-         ch1 = (char)read1;  // Assign EOF if we hit the end of file
-         ch2 = (char)read2;
-         break;
-      }
-      ch1 = (char)read1;
-      ch2 = (char)read2;
+      int ch1 = fgetc (f1);
+      int ch2 = fgetc (f2);
+      if (ch1 == EOF || ch2 == EOF)  break;   // If either file has ended, break out of the loop
       if (ch1 == '\n' || ch1 == ' ')  continue;
       if (ch2 == '\n' || ch2 == ' ')  continue;
       if (ch1 != ch2) {   // Compare the characters
@@ -93,7 +86,7 @@ int main (int argc, char** argv) {
       snprintf (expectedOutputFile, sizeof (expectedOutputFile), "test%dout.txt", i + 1);
       char generatedOutputFile[256];       // Construct the generated output file name
       snprintf (generatedOutputFile, sizeof (generatedOutputFile), "test%dactl.txt", i + 1);
-      if (ExecProgram (argv[1], input_file, generatedOutputFile) != 0) printf ("\nError executing test %d\n", i + 1);
+      if (ExecProgram (argv[1], (char*)input_file, generatedOutputFile) != 0) printf ("\nError executing test %d\n", i + 1);
       else printf (compareFiles (generatedOutputFile, expectedOutputFile) ? "\nNo error testing %s\n" : "\nError comparing output for %s\n", input_file);
    }
    return 0;
