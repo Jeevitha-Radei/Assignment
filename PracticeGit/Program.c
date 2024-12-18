@@ -21,7 +21,7 @@
 void PrintChessboard (FILE* output);
 
 /// <summary>Function to compare two files and provide the exact location of differences</summary>
-int FileCompare (const char* file1, const char* file2);
+int FileCompare (const char* file1, const char* file2, int* row, int* col);
 
 void PrintChessboard (FILE* output) {
    wchar_t whitePieces[8] =
@@ -63,14 +63,14 @@ void PrintChessboard (FILE* output) {
    fwprintf (output, L"%lc%lc%lc%lc", 0x2501, 0x2501, 0x2501, 0x251B);  // Bottom-right corner
 }
 
-int FileCompare (const char* file1, const char* file2) {
+int FileCompare (const char* file1, const char* file2, int* row, int* col) {
    FILE* f1 = fopen (file1, "r, ccs=UTF-8");
    FILE* f2 = fopen (file2, "r, ccs=UTF-8");
    if (f1 == NULL || f2 == NULL) {
       perror ("Error opening file");
       return 0;
    }
-   int line = 1, col = 1;
+   *row = 1, *col = 1;
    wchar_t ch1 = fgetwc (f1);
    wchar_t ch2 = fgetwc (f2);
    while (ch1 != WEOF || ch2 != WEOF) {
@@ -80,10 +80,10 @@ int FileCompare (const char* file1, const char* file2) {
          return DIFFERENCE;  // Files are different
       }
       if (ch1 == L'\n' || ch2 == L'\n') {
-         line++;
-         col = 1;
+         *row += 1;
+         *col = 1;
       }
-      else col++;
+      else *col += 1;
       ch1 = fgetwc (f1);
       ch2 = fgetwc (f2);
    }
@@ -92,19 +92,9 @@ int FileCompare (const char* file1, const char* file2) {
       fclose (f2);
       return TEST_PASS;  // Both files ended at the same time, they are identical
    }
-   if (ch1 == WEOF) {
-      fclose (f1);
-      fclose (f2);
-      return REFERENCE_EOF_REACHED;  // Reference file reached EOF first
-   }
-   if (ch2 == WEOF) {
-      fclose (f1);
-      fclose (f2);
-      return OUTPUT_EOF_REACHED;  // Output file reached EOF first
-   }
    fclose (f1);
    fclose (f2);
-   return TEST_PASS;  // Files are identical
+   return (ch1 == WEOF) ? REFERENCE_EOF_REACHED : OUTPUT_EOF_REACHED;
 }
 
 int main () {
@@ -122,7 +112,7 @@ int main () {
    if (choice[0] == 'y' || choice[0] == 'Y') {
       PrintChessboard (output);
       fclose (output);
-      int result = FileCompare ("Chess.txt", "chessboardref.txt"), row = 1, col = 1;
+      int row, col, result = FileCompare ("Chess.txt", "chessboardref.txt", &row, &col);
       switch (result) {
       case TEST_PASS: wprintf (L"Test Passed\n"); break;
       case OUTPUT_EOF_REACHED:
