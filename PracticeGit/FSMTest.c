@@ -77,17 +77,17 @@ int main (int argc, char** argv) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   const char* input_files[] = {
+   const char* inputFiles[] = {
        "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt", "test5in.txt", "test6in.txt"
    };
    for (int i = 0; i < NTESTS; i++) {
-      const char* input_file = input_files[i];
+      const char* inputFile = inputFiles[i];
       char expectedOutputFile[256];         // Construct the expected reference output file name
       snprintf (expectedOutputFile, sizeof (expectedOutputFile), "test%dout.txt", i + 1);
       char generatedOutputFile[256];       // Construct the generated output file name
       snprintf (generatedOutputFile, sizeof (generatedOutputFile), "test%dactl.txt", i + 1);
-      if (ExecProgram (argv[1], (char*)input_file, generatedOutputFile) != 0) printf ("\nError executing test %d\n", i + 1);
-      else printf (compareFiles (generatedOutputFile, expectedOutputFile) ? "\nNo error testing %s\n" : "\nError comparing output for %s\n", input_file);
+      if (ExecProgram (argv[1], (char*)inputFile, generatedOutputFile) != 0) printf ("\nError executing test %d\n", i + 1);
+      else printf (compareFiles (generatedOutputFile, expectedOutputFile) ? "\nNo error testing %s\n" : "\nError comparing output for %s\n", inputFile);
    }
    return 0;
 }

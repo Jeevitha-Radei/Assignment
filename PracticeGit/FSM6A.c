@@ -25,40 +25,40 @@ State MealyState (State currentState, int input, int* output);
 
 State MealyState (State currentState, int input, int* output) {
    switch (currentState) {
-   case S0:
-      *output = 0;
-      return (input == 0) ? S1 : S6;   // Transition to S1 else S6
-   case S1:
-      *output = 0;
-      return(input == 1) ? S2 : S1;   // Transition to S2 after '01' else S1
-   case S2:
-      *output = 0;
-      return (input == 1) ? S3 : S1;   // Transitions to S3 after '011'
-   case S3:
-      if (input == 0) {
-         *output = 1;   // output '1' upon seeing '0110'
-         return S4;   // Transitions to S4
-      }
-      else {
+      case S0:
          *output = 0;
-         return S5;   // Transitions to S5 if input is '1'
-      }
-   case S4:
-      if (input == 1) {
-         *output = 1;   // output '1' upon seeing '1101'
-         return S2;    // Return to S2
-      }
-      else {
+         return (input == 0) ? S1 : S6;   // Transition to S1 else S6
+      case S1:
          *output = 0;
-         return S1;   // Return to S1 if input is '0'
-      }
-   case S5:
-      *output = 0;
-      return(input == 0) ? S4 : S5;   // Transition to S4 else stay in S5
-   case S6:
-      *output = 0;   // Output '0' and transition to S1 if '0' or S5 if '1'
-      return (input == 0) ? S1 : S5;
-   default: return S0;   // Default return to initial state
+         return (input == 1) ? S2 : S1;   // Transition to S2 after '01' else S1
+      case S2:
+         *output = 0;
+         return (input == 1) ? S3 : S1;   // Transitions to S3 after '011'
+      case S3:
+         if (input == 0) {
+            *output = 1;   // output '1' upon seeing '0110'
+            return S4;   // Transitions to S4
+         }
+         else {
+            *output = 0;
+            return S5;   // Transitions to S5 if input is '1'
+         }
+      case S4:
+         if (input == 1) {
+            *output = 1;   // output '1' upon seeing '1101'
+            return S2;    // Return to S2
+         }
+         else {
+            *output = 0;
+            return S1;   // Return to S1 if input is '0'
+         }
+      case S5:
+         *output = 0;
+         return (input == 0) ? S4 : S5;   // Transition to S4 else stay in S5
+      case S6:
+         *output = 0;   // Output '0' and transition to S1 if '0' or S5 if '1'
+         return (input == 0) ? S1 : S5;
+      default: return S0;   // Default return to initial state
    }
 }
 
@@ -71,7 +71,7 @@ int main (int argc, char* argv[]) {
    int output = 0;
    FILE* inputFile = fopen (argv[1], "r");
    FILE* outputFile = fopen (argv[2], "w");
-   if (inputFile == NULL|| outputFile==NULL) {
+   if (inputFile == NULL || outputFile == NULL) {
       perror ("Error opening the file");
       return 1;
    }
