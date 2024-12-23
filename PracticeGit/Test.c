@@ -14,13 +14,13 @@
 #define GREEN   "\033[1;32m"
 #define RESET   "\033[0m"
 
-/// <summary> Prints the elements of an array. </summary>
+/// <summary>Prints the elements of an array.</summary>
 void PrintArray (int array[], int size);
 
-/// <summary> Runs test cases for the QuickSort function. </summary>
+/// <summary>Runs test cases for the QuickSort function.</summary>
 void RunQuickSortTest ();
 
-/// <summary> Gets user input for an array, sorts it, and performs a binary search. </summary>
+/// <summary>Gets user input for an array, sorts it,& performs a binary search.</summary>
 void GetUserInput ();
 
 /// <summary>Compare Arrays returns true or false. </summary>
@@ -35,6 +35,10 @@ bool AreArraysEqual (int arr1[], int arr2[], int size1, int size2) {
    for (int i = 0; i < size1; i++)
       if (arr1[i] != arr2[i]) return false;
    return true;    // Arrays are equal if all elements match
+}
+
+void SortEntireArray (int array[], int size) {
+   QuickSort (array, 0, size - 1);     // Default start index is 0
 }
 
 void RunQuickSortTest () {
@@ -62,6 +66,7 @@ void RunQuickSortTest () {
    };
    int sizes[] = { 9, 7, 1, 7, 6, 6, 2, 7, 6 };
    int elementSearch[] = { 11, 1, 0, -1, 2, 6, 36, 53, 11 };
+   int expectedIndex[] = { 2, ELEMENT_NOT_FOUND, ELEMENT_NOT_FOUND, 2, 1,ELEMENT_NOT_FOUND, 0, ELEMENT_NOT_FOUND, 0 };
    int testCount = sizeof (testCases) / sizeof (testCases[0]);
    printf ("+--------------------------------------------------+---------------+------------------+--------+\n"
       "|                Arrays                            | Key to Search | Index of element | Result |\n"
@@ -71,29 +76,27 @@ void RunQuickSortTest () {
       printf ("| Unsorted Array   | ");
       PrintArray (arrayToSort, size);
       printf ("%*s|", (MAXSIZE - size) * 3, " ");
-      int searchValue = elementSearch[i];   // Element to search for in the current test case
-      QuickSort (arrayToSort, 0, size - 1);
-      int foundIndex = GetIndex (arrayToSort, size, searchValue);
-      if (foundIndex == ELEMENT_NOT_FOUND) printf ("    %-11d|    Not Found     |", searchValue);
-      else printf ("    %-11d| Found at index %-d |", searchValue, foundIndex);
-      printf ("  %-8s  |\n", AreArraysEqual (arrayToSort, expectedResults[i], size, size) ? GREEN"Pass"RESET : RED"Fail"RESET);
+      int searchValue = elementSearch[i];
+      SortEntireArray (arrayToSort, size);
+      int foundIndex = GetIndex (arrayToSort, size, elementSearch[i]);
+      bool searchTestPass = (foundIndex == expectedIndex[i]);
+      bool sortTestPass = AreArraysEqual (arrayToSort, expectedResults[i], size, size);
+      printf (" %-14d| %-2d | %-8s  | %-8s  |\n", elementSearch[i], foundIndex, foundIndex== - 1 ?
+         "Not Found " : " Found    ", (searchTestPass && sortTestPass) ? GREEN "Pass " RESET : RED "Fail " RESET);
       printf ("| Sorted Array     | ");
       PrintArray (arrayToSort, size);
-      printf ("%*s|", (MAXSIZE - size) * 3, " ");
-      printf ("\n+--------------------------------------------------+---------------+------------------+--------+\n");
+      printf ("\n");
+      printf ("+--------------------------------------------------+---------------+------------------+--------+\n");
    }
 }
+
 void GetUserInput () {
    int array[MAXSIZE], size;
    char input[256], * endptr;
-   while (1) {
+   while (true) {
       printf ("Enter the number of elements (1 to %d): ", MAXSIZE);
       fgets (input, sizeof (input), stdin);
       size = strtol (input, &endptr, 10);   // Convert input to integer
-      if (*endptr != '\n' && *endptr != '\0') {
-         printf ("Invalid input. Please enter a valid integer.\n");
-         continue;
-      }
       if (size < 1 || size > MAXSIZE) {
          printf ("Invalid number of elements. Please enter a value between 1 and %d.\n", MAXSIZE);
          continue;
@@ -102,28 +105,36 @@ void GetUserInput () {
    }
    printf ("Enter %d integers:\n", size);
    for (int i = 0; i < size; i++) {
-      while (1) {
+      while (true) {
          fgets (input, sizeof (input), stdin);
-         array[i] = strtol (input, &endptr, 10);
-         if (*endptr == '\n' || *endptr == '\0') break;  // Valid input
-         printf ("Invalid input. Please enter an integer: ");
+         long value = strtol (input, &endptr, 10);
+         if ((*endptr != '\0' && *endptr != '\n') || value < INT_MIN || value > INT_MAX) {
+            printf ("Invalid input.lease enter within the valid range of %d to %d: ",
+               INT_MIN, INT_MAX);
+            continue;
+         }
+         array[i] = (int)value;
+         break;
       }
    }
    printf ("Unsorted Array: ");
    PrintArray (array, size);
-   QuickSort (array, 0, size - 1);
+  SortEntireArray (array, size);
    printf ("\nSorted Array: ");
    PrintArray (array, size);
-   int target;  // Target element to search
+   int target;    // Target element to search
    printf ("\nEnter the element to search for: ");
    fgets (input, sizeof (input), stdin);
-   target = strtol (input, &endptr, 10);
-   if (*endptr != '\n' && *endptr != '\0') {
-      printf ("Invalid input. Please enter a valid integer.\n");
+   long value = strtol (input, &endptr, 10);
+   if ((*endptr != '\0' && *endptr != '\n') || value < INT_MIN || value > INT_MAX) {
+      printf ("Invalid input or input out of range."
+         "Please enter a valid integer within the range of % d to % d.\n", INT_MIN, INT_MAX);
       return;
    }
+   target = (int)value;  // Safe to assign the value
    int result = GetIndex (array, size, target);
-   printf (result == ELEMENT_NOT_FOUND ? "Element %d not found.\n" : "Element %d found at index %d.\n", target, result);
+   printf (result == ELEMENT_NOT_FOUND ? "Element %d not found.\n" :
+      "Element %d found at index %d.\n", target, result);
 }
 
 int main () {
