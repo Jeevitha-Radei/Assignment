@@ -20,10 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cash.c" />
-    <ClCompile Include="TestCash.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cash.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
