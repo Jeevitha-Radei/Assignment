@@ -15,55 +15,68 @@
 #define NEGATIVE_VALUE -1
 #define INSUFFICIENT_PAYMENT -2
 
-/// <summary>Calculates change, handling errors for negative values or insufficient payment. Returns success.</summary>
-int CalculateChange (int cashPaid, int actualAmount, int* denominations, int numDenominations);
+/// <summary>Calculates change, handling errors for negative values or insufficient payment.Returns success.</summary>
+int CalculateChange (int cashPaid, int actualAmt, int* denominations, int numDenom, int* coinCount,
+   int* change);
 
-int CalculateChange (int cashPaid, int actualAmount, int* denominations, int numDenominations) {
-   int change = cashPaid - actualAmount, coinCount[4] = { 0 };
-   for (int i = 0; i < numDenominations; i++) {
-      coinCount[i] = change / denominations[i];
-      change = change % denominations[i];  // Update the remaining change
+int CalculateChange (int cashPaid, int actualAmt, int* denominations, int numDenom, int* coinCount,
+   int* change) {
+   *change = cashPaid - actualAmt;  // Calculate the total change
+   if (*change < 0) return INSUFFICIENT_PAYMENT;
+   int remainingChange = *change;
+   for (int i = 0; i < numDenom; i++) {
+      coinCount[i] = remainingChange / denominations[i];
+      remainingChange = remainingChange % denominations[i];
    }
-   printf ("Cash Paid: Rs. %d, Actual Amount: Rs. %d\n", cashPaid, actualAmount);
-   if (cashPaid < 0 || actualAmount < 0) {
-      printf ("Negative value encountered. Cash Paid and Actual Amount must be non-negative.\n");
-      return NEGATIVE_VALUE;
-   }
-   else if (cashPaid < actualAmount) {
-      printf ("Insufficient payment. The remaining amount to be paid: Rs. %d\n", actualAmount - cashPaid);
-      return INSUFFICIENT_PAYMENT;
-   }
-   else if (cashPaid == actualAmount) printf ("No change to be returned.\n");
-   else {
-      printf ("Cash to be returned: %d\n", cashPaid - actualAmount);
-      for (int j = 0; j < numDenominations; j++)
-         printf ("No. of Rs. %d coins: %d\n", denominations[j], coinCount[j]);
-   }
+   if (cashPaid < 0 || actualAmt < 0) return NEGATIVE_VALUE;
    return SUCCESS;
 }
 
-void RunTestCases (int* denominations, int numDenominations) {
-   for (int i = 0; i < 10; i++) {
-      int cashPaid = rand () % 1000, actualAmount = rand () % 1000;
-      printf ("\nTest Case %d:\n", i + 1);
-      int expected = SUCCESS;
-      if (cashPaid < actualAmount) expected = INSUFFICIENT_PAYMENT;
-      else if (cashPaid < 0 || actualAmount < 0) expected = NEGATIVE_VALUE;
-      int result = CalculateChange (cashPaid, actualAmount, denominations, numDenominations);
-      (result == expected) ? printf (GREEN"Test Passed\n"RESET) : printf (RED"Test Failed\n"RESET);
+void PrintChange (int cashPaid, int actualAmt, int* denominations, int numDenom, int* coinCount, int change) {
+   printf ("Cash Paid: Rs. %d, Actual Amount: Rs. %d\n", cashPaid, actualAmt);
+   if (cashPaid < 0 || actualAmt < 0)
+      printf ("Negative value encountered. Cash Paid and Actual Amount must be non-negative.\n");
+   else if (change < 0)
+      printf ("Insufficient payment. The remaining amount to be paid: Rs. %d\n", -change);
+   else if (change == 0) printf ("No change to be returned.\n");
+   else {
+      printf ("Cash to be returned: Rs. %d\n", change);
+      for (int j = 0; j < numDenom; j++)
+         printf ("No. of Rs. %d coins: %d\n", denominations[j], coinCount[j]);
    }
 }
 
+void RunTestCases (int* denominations, int numDenom) {
+   int allTestsPassed = 1;
+   for (int i = 0; i < 10; i++) {
+      int cashPaid = rand () % 1000, actualAmt = rand () % 1000;
+      int coinCount[4] = { 0 }, change = 0;
+      printf ("\nTest Case %d:\n", i + 1);
+      int expected = SUCCESS;
+      if (cashPaid < actualAmt) expected = INSUFFICIENT_PAYMENT;
+      else if (cashPaid < 0 || actualAmt < 0) expected = NEGATIVE_VALUE;
+      int result = CalculateChange (cashPaid, actualAmt, denominations, numDenom, coinCount, &change);
+      PrintChange (cashPaid, actualAmt, denominations, numDenom, coinCount, change);
+      if (result != expected) {
+         allTestsPassed = 0;
+         printf (RED "Test Failed\n" RESET);
+         break;
+      }
+   } if (allTestsPassed) printf (GREEN "All Test Cases Passed\n" RESET);
+}
+
 void GetUserInput (int* denominations, int numDenominations) {
-   int cashPaid, actualAmount;
+   int cashPaid, actualAmt;
    char input[256];
    printf ("Enter the Cash Paid: ");
    fgets (input, sizeof (input), stdin);
    cashPaid = atoi (input);
    printf ("Enter the Actual Amount: ");
    fgets (input, sizeof (input), stdin);
-   actualAmount = atoi (input);
-   CalculateChange (cashPaid, actualAmount, denominations, numDenominations);
+   actualAmt = atoi (input);
+   int coinCount[4] = { 0 }, change = 0;
+   int result = CalculateChange (cashPaid, actualAmt, denominations, numDenominations, coinCount, &change);
+   PrintChange (cashPaid, actualAmt, denominations, numDenominations, coinCount, change);
 }
 
 int main () {
@@ -77,18 +90,10 @@ int main () {
       fgets (input, sizeof (input), stdin);
       choice = atoi (input);  // Convert the string input to an integer
       switch (choice) {
-      case 1:
-         RunTestCases (denominations, numDenominations);
-         break;
-      case 2:
-         GetUserInput (denominations, numDenominations);
-         break;
-      case 3:
-         printf ("Exiting...\n");
-         break;
-      default:
-         printf ("Invalid choice. Please try again.\n");
-         break;
+         case 1: RunTestCases (denominations, numDenominations); break;
+         case 2: GetUserInput (denominations, numDenominations); break;
+         case 3: printf ("Exiting...\n"); break;
+         default: printf ("Invalid choice. Please try again.\n"); break;
       }
    } while (choice != 3);  // Keep running until user chooses to exit
    return 0;
