@@ -55,11 +55,11 @@ int compareFiles (const char* file1, const char* file2) {
    while (1) {
       int ch1 = fgetc (f1);
       int ch2 = fgetc (f2);
-      if (ch1 == EOF || ch2 == EOF)  break;   // If either file has ended, break out of the loop
-      if (ch1 == '\n' || ch1 == ' ')  continue;
-      if (ch2 == '\n' || ch2 == ' ')  continue;
+      if (ch1 == EOF || ch2 == EOF) break;   // If either file has ended, break out of the loop
+      if (ch1 == '\n' || ch1 == ' ') continue;
+      if (ch2 == '\n' || ch2 == ' ') continue;
       if (ch1 != ch2) {   // Compare the characters
-         printf ("Error at bit no. %d, Expected %c, Actual %c\n", bitNum, ch2, ch1);
+         printf ("Error at bit no. %d, Expected %c (0x%x), Actual %c (0x%x)\n", bitNum, ch2, ch2, ch1, ch1);
          fclose (f1);
          fclose (f2);
          return 0;
@@ -78,16 +78,32 @@ int main (int argc, char** argv) {
       return -1;
    }
    const char* inputFiles[] = {
-       "test1in.txt", "test2in.txt", "test3in.txt", "test4in.txt", "test5in.txt", "test6in.txt"
+       "TData/test1in.txt", "TData/test2in.txt", "TData/test3in.txt", "TData/test4in.txt", "TData/test5in.txt", "TData/test6in.txt"
    };
+   const char* expectedOutputFiles[] = {
+       "TData/test1out.txt", "TData/test2out.txt", "TData/test3out.txt", "TData/test4out.txt", "TData/test5out.txt", "TData/test6out.txt"
+   };
+   const char* outputFile = "TData/testOutput.txt";
+   FILE* outFile = fopen (outputFile, "a");
+   if (!outFile) {
+      printf ("Error opening output file for appending\n");
+      return 1;
+   }
+   fclose (outFile);  // Close the file after the check, it will be opened again when writing the output
    for (int i = 0; i < NTESTS; i++) {
       const char* inputFile = inputFiles[i];
-      char expectedOutputFile[256];         // Construct the expected reference output file name
-      snprintf (expectedOutputFile, sizeof (expectedOutputFile), "test%dout.txt", i + 1);
-      char generatedOutputFile[256];       // Construct the generated output file name
-      snprintf (generatedOutputFile, sizeof (generatedOutputFile), "test%dactl.txt", i + 1);
-      if (ExecProgram (argv[1], (char*)inputFile, generatedOutputFile) != 0) printf ("\nError executing test %d\n", i + 1);
-      else printf (compareFiles (generatedOutputFile, expectedOutputFile) ? "\nNo error testing %s\n" : "\nError comparing output for %s\n", inputFile);
+      const char* expectedOutputFile = expectedOutputFiles[i];
+      if (ExecProgram (argv[1], (char*)inputFile, (char*)outputFile)) {
+         printf ("\nError executing test %d\n", i + 1);
+         return 1;  // Exit immediately if execution fails
+      }
+      else {
+         if (!compareFiles (outputFile, expectedOutputFile)) {
+            printf ("\nTest %d failed at output for %s\n", i + 1, inputFile);
+            return 1;  // Exit immediately on failure
+         }
+      }
    }
+   printf ("All test cases passed.\n");
    return 0;
 }
