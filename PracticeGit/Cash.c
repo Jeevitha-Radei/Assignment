@@ -33,7 +33,7 @@ int CalculateChange (int cashPaid, int actualAmt, int* denominations, int numDen
 }
 
 void PrintChange (int cashPaid, int actualAmt, int* denominations, int numDenom, int* coinCount, int change) {
-   printf ("Cash Paid: Rs. %d, Actual Amount: Rs. %d\n", cashPaid, actualAmt);
+   printf ("\nCash Paid: Rs. %d, Actual Amount: Rs. %d\n", cashPaid, actualAmt);
    if (cashPaid < 0 || actualAmt < 0)
       printf ("Negative value encountered. Cash Paid and Actual Amount must be non-negative.\n");
    else if (change < 0)
@@ -47,22 +47,18 @@ void PrintChange (int cashPaid, int actualAmt, int* denominations, int numDenom,
 }
 
 void RunTestCases (int* denominations, int numDenom) {
-   int allTestsPassed = 1;
    for (int i = 0; i < 10; i++) {
       int cashPaid = rand () % 1000, actualAmt = rand () % 1000;
-      int coinCount[4] = { 0 }, change = 0;
-      printf ("\nTest Case %d:\n", i + 1);
-      int expected = SUCCESS;
+      int coinCount[4] = { 0 }, change = 0, expected = SUCCESS;
       if (cashPaid < actualAmt) expected = INSUFFICIENT_PAYMENT;
       else if (cashPaid < 0 || actualAmt < 0) expected = NEGATIVE_VALUE;
       int result = CalculateChange (cashPaid, actualAmt, denominations, numDenom, coinCount, &change);
       PrintChange (cashPaid, actualAmt, denominations, numDenom, coinCount, change);
       if (result != expected) {
-         allTestsPassed = 0;
          printf (RED "Test Failed\n" RESET);
-         break;
+         return;
       }
-   } if (allTestsPassed) printf (GREEN "All Test Cases Passed\n" RESET);
+   }printf (GREEN "\nAll Test Cases Passed\n" RESET);
 }
 
 void GetUserInput (int* denominations, int numDenominations) {
