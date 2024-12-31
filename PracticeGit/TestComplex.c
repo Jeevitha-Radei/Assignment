@@ -8,95 +8,91 @@
 #include <math.h>
 #include "Complex.h"
 
- // Function to print complex numbers
-void PrintComplex (ComplexNumber c);
+/// <summary>Function to check if two floats are approximately equal</summary>
+int CompareFloat (float a, float b, float epsilon);
 
-// Function to compare both values
+/// <summary>Function to compute the expected values for the operations</summary>
+void ComputeExpectedValues (ComplexNumber a, ComplexNumber b, float* expected);
+
+/// <summary>Function to compare two complex numbers</summary>
 int CompareComplex (ComplexNumber result, float expectedReal, float expectedImg);
 
-// Function to run the test cases
-void RunTestCases ();
+int CompareFloat (float a, float b, float epsilon) {
+   return fabs (a - b) < epsilon;
+}
+
+void ComputeExpectedValues (ComplexNumber a, ComplexNumber b, float* expected) {
+   expected[0] = a.Real + b.Real;   // Addition
+   expected[1] = a.Img + b.Img;
+   expected[2] = a.Real - b.Real;   // Subtraction
+   expected[3] = a.Img - b.Img;
+   expected[4] = a.Real * b.Real - a.Img * b.Img;   // Multiplication
+   expected[5] = a.Real * b.Img + a.Img * b.Real;
+   expected[6] = sqrt (a.Real * a.Real + a.Img * a.Img);   // Modulus
+   expected[7] = a.Real;   // Conjugate 
+   expected[8] = -a.Img;
+}
 
 void PrintComplex (ComplexNumber c) {
-   if (c.img >= 0) printf ("%.2f + %.2fi\n", c.real, c.img);
-   else printf ("%.2f - %.2fi\n", c.real, -c.img);
+   printf ("%.2f %s %.2fi\n", c.Real, (c.Img >= 0) ? "+" : "-", fabs (c.Img));
 }
 
 int CompareComplex (ComplexNumber result, float expectedReal, float expectedImg) {
-   return (result.real == expectedReal && result.img == expectedImg);
+   return (fabs (result.Real - expectedReal) < 0.01 && fabs (result.Img - expectedImg) < 0.01);
+}
+
+int CheckModulusTestResult (const char* testName, float result, float expected, float epsilon) {
+   if (!CompareFloat (result, expected, epsilon)) {
+      printf ("Test Failed for %s!\n", testName);
+      return 0;
+   }
+   return 1;  // Return 1 for success
+}
+
+int CheckTestResult (const char* testName, ComplexNumber result, float expectedReal, float expectedImg) {
+   if (!CompareComplex (result, expectedReal, expectedImg)) {
+      printf ("Test Failed for %s!\n", testName);
+      return 0;
+   }
+   return 1;  // Return 1 for success
 }
 
 void RunTestCases () {
    ComplexNumber input[] = { {3.0, 7.0}, {4.0, -3.0} };
-   float expected[] = { 7.00, 4.00, -1.00, 10.00, 33.00, 19.00, 7.62, 3.00, -7.00 };
-   printf ("Running Additon Test...\n");
-   ComplexNumber resultAdd = OpAdd (input[0], input[1]);
-   printf ("Expected: %.2f + %.2fi\n", expected[0], expected[1]);
-   printf ("Result: ");
-   PrintComplex (resultAdd);
-   printf ("%s\n\n", (CompareComplex (resultAdd, expected[0], expected[1])) ? "Passed" : "Failed");
-   printf ("Running Subtraction Test...\n");
-   ComplexNumber resultSub = OpSub (input[0], input[1]);
-   printf ("Expected: %.2f + %.2fi\n", expected[2], expected[3]);
-   printf ("Result: ");
-   PrintComplex (resultSub);
-   printf ("%s\n\n", (CompareComplex (resultSub, expected[2], expected[3])) ? "Passed" : "Failed");
-   printf ("Running Multiply Test...\n");
-   ComplexNumber resultMul = OpMul (input[0], input[1]);
-   printf ("Expected: %.2f + %.2fi\n", expected[4], expected[5]);
-   printf ("Result: ");
-   PrintComplex (resultMul);
-   printf ("%s\n\n", (CompareComplex (resultMul, expected[4], expected[5])) ? "Passed" : "Failed");
-   printf ("Running Modulus Test...\n");
-   float modResult = Modulus (input[0]);
-   printf ("Expected: %.2f\n", expected[6]);
-   printf ("Result: %.2f\n", modResult);
-   float epsilon = 0.01;
-   printf ("%s\n\n", (fabs (modResult - expected[6]) < epsilon) ? "Passed" : "Failed");
-   printf ("Running Conjugate Test...\n");
-   ComplexNumber resultConj = Conjugate (input[0]);
-   printf ("Expected: %.2f + %.2fi\n", expected[7], expected[8]);
-   printf ("Result: ");
-   PrintComplex (resultConj);
-   printf ("%s\n\n", CompareComplex (resultConj, expected[7], expected[8]) ? "Passed" : "Failed");
-}
-
-void GetUserInput () {
-   ComplexNumber A, B;
-   printf ("Enter the real part and imaginary part of the first complex number: ");
-   scanf_s ("%f %f", &A.real, &A.img);
-   printf ("Enter the real part and imaginary part of the second complex number: ");
-   scanf_s ("%f %f", &B.real, &B.img);
-   printf ("\nAddition: ");
-   PrintComplex (OpAdd (A, B));
-   printf ("\nSubtraction: ");
-   PrintComplex (OpSub (A, B));
-   printf ("\nMultiplication: ");
-   PrintComplex (OpMul (A, B));
-   printf ("\nModulus of A: %.2f\n", Modulus (A));
-   printf ("\nConjugate of A: ");
-   PrintComplex (Conjugate (A));
+   float expected[9], epsilon = 0.01;
+   ComplexNumber a, b;
+   for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
+         a = input[i];
+         b = input[j];
+         printf ("\nRunning tests for Complex %.2f + %.2fi and Complex %.2f %s %.2fi...\n",
+            a.Real, a.Img, b.Real, (b.Img >= 0) ? "+" : "-", fabs (b.Img));
+         ComputeExpectedValues (a, b, expected);
+         ComplexNumber (*operations[])(ComplexNumber, ComplexNumber) = { OpAdd, OpSub, OpMul };
+         const char* operationNames[] = { "Addition", "Subtraction", "Multiplication" };
+         for (int k = 0; k < 3; k++) {
+            printf ("\nPerforming %s:\n", operationNames[k]);
+            ComplexNumber result = operations[k] (a, b);
+            printf ("Expected: %.2f %s %.2fi\nResult: ", expected[2 * k], (expected[2 * k + 1] >= 0)
+               ? "+" : "-", fabs (expected[2 * k + 1]));
+            PrintComplex (result);
+            if (!CheckTestResult (operationNames[k], result, expected[2 * k], expected[2 * k + 1])) return;
+         }
+         printf ("\nRunning Modulus Test for Complex %.2f + %.2fi...\n", a.Real, a.Img);
+         float modResult = Modulus (a);
+         printf ("Expected: %.2f\nResult: %.2f\n", expected[6], modResult);
+         if (!CheckModulusTestResult ("Modulus", modResult, expected[6], epsilon)) return;
+         printf ("\nRunning Conjugate Test for Complex %.2f + %.2fi...\n", a.Real, a.Img);
+         ComplexNumber resultConj = Conjugate (a);
+         printf ("Expected: %.2f %s %.2fi\nResult: ", expected[7], (expected[8] >= 0) ? "+" : "-", fabs (expected[8]));
+         PrintComplex (resultConj);
+         if (!CheckTestResult ("Conjugate", resultConj, expected[7], expected[8])) return;
+      }
+   }
+   printf ("\nAll tests passed successfully!\n");
 }
 
 int main () {
-   int choice, operationChoice;
-   do {
-      printf ("\nSelect an option:\n1. Run Test Cases\n2. Complex Number Operations\n3. Exit\nEnter your choice (1-3): ");
-      scanf_s ("%d", &choice);
-      switch (choice) {
-      case 1:
-         RunTestCases ();
-         break;
-      case 2:
-         GetUserInput ();
-         break;
-      case 3:
-         printf ("Exiting the program.\n");
-         break;
-      default:
-         printf ("Invalid choice! Please enter a number between 1 and 3.\n");
-         break;
-      }
-   } while (choice != 3);  // Continue until the user chooses to exit
+   RunTestCases ();
    return 0;
 }
