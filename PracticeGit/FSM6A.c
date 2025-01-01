@@ -21,35 +21,37 @@ typedef enum {
    S4,  // '0110' or '110'
    S5,  // '11'
    S6,  // '1'
-   INVALID  // State for invalid input (e.g., non '0' or '1')
 } State;
 
 ///<summary>Function to get the next state and output based on the current state and input.</summary>
 State MealyState (State currentState, int input, int* output);
 
 State MealyState (State currentState, int input, int* output) {
-   *output = 0;
-   if (input != 0 && input != 1) return INVALID;
    switch (currentState) {
-      case S0:
-         return (input == 0) ? S1 : S6;   // Transition to S1 else S6
-      case S1:
-         return (input == 1) ? S2 : S1;   // Transition to S2 after '01' else S1
-      case S2:
-         return (input == 1) ? S3 : S1;   // Transitions to S3 after '011'
-      case S3:
-         *output = (input == 0) ? 1 : 0;  // output '1' upon seeing '0110', else '0'
-         return (input == 0) ? S4 : S5;   // Transitions to S4 if input is '0', else S5
-      case S4:
-         *output = (input == 1) ? 1 : 0;  // output '1' upon seeing '1101', else '0'
-         return (input == 1) ? S2 : S1;   // Return to S2 if input is '1', else S1
-      case S5:
-         return (input == 0) ? S4 : S5;   // Transition to S4 else stay in S5
-      case S6:
-         return (input == 0) ? S1 : S5;
-      case INVALID:
-         return INVALID; // Stay in INVALID state for invalid inputs
-      default: return S0;   // Default return to initial state
+   case S0:
+      *output = 0;
+      return (input == 0) ? S1 : S6;   // Transition to S1 else S6
+   case S1:
+      *output = 0;
+      return (input == 1) ? S2 : S1;   // Transition to S2 after '01' else S1
+   case S2:
+      *output = 0;
+      return (input == 1) ? S3 : S1;   // Transitions to S3 after '011'
+   case S3:
+      *output = !input;  // output '1' on '0110', else '0'
+      return (input == 0) ? S4 : S5;   // Transitions to S4 if input is '0', else S5
+   case S4:
+      *output = input;  // output '1' on '1101', else '0'
+      return (input == 1) ? S2 : S1;   // Return to S2 if input is '1', else S1
+   case S5:
+      *output = 0;
+      return (input == 0) ? S4 : S5;   // Transition to S4 else stay in S5 
+   case S6:
+      *output = 0;
+      return (input == 0) ? S1 : S5; 
+   default:
+      *output = 0;
+      return S0;  // Default return to initial state
    }
 }
 
@@ -72,12 +74,6 @@ int main (int argc, char* argv[]) {
       if (inputChar == '0' || inputChar == '1') {
          int input = inputChar - '0';
          currentState = MealyState (currentState, input, &output);
-         if (currentState == INVALID) {
-            printf ("Invalid input encountered: '%c'\n", inputChar);
-            fclose (inputFile);
-            fclose (outputFile);
-            return ERROR_INVALID_INPUT;
-         }
          outputBuffer[outputIndex++] = output + '0';  // Store output as char
       } else  currentState = MealyState (currentState, 0, &output);  // Handle invalid chars
    }
