@@ -16,20 +16,22 @@ void Swap (int* a, int* b) {
    }
 }
 
-void QuickSort (int array[], int left, int right) {
+void QuickSort (int array[], int size) {
+   if (size <= 1) return;  // No need to sort an empty or single-element array
+   int left = 0, right = size - 1;
    if (left < right) {
       int pivot = array[right];   // Select the pivot element (last element in the array)
       int i = left - 1;
       for (int j = left; j < right; j++) {
-         if (array[j] <= pivot) { 
+         if (array[j] <= pivot) {
             i++;
             Swap (&array[i], &array[j]);
          }
       }
       Swap (&array[i + 1], &array[right]);
       int pi = i + 1;   // Partition the array and sort the subarrays recursively
-      QuickSort (array, left, pi - 1);
-      QuickSort (array, pi + 1, right);
+      QuickSort (array, pi);         // Sort the left subarray
+      QuickSort (array + pi + 1, size - pi - 1);  // Sort the right subarray
    }
 }
 

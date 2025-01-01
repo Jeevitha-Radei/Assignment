@@ -37,10 +37,6 @@ bool AreArraysEqual (int arr1[], int arr2[], int size1, int size2) {
    return true;    // Arrays are equal if all elements match
 }
 
-void SortEntireArray (int array[], int size) {
-   QuickSort (array, 0, size - 1);     // Default start index is 0
-}
-
 void RunQuickSortTest () {
    int testCases[][MAXSIZE] = {
        {20, 49, 11, 3, 89, 75, 11, 12, 1},
@@ -77,7 +73,7 @@ void RunQuickSortTest () {
       PrintArray (arrayToSort, size);
       printf ("%*s|", (MAXSIZE - size) * 3, " ");
       int searchValue = elementSearch[i];
-      SortEntireArray (arrayToSort, size);
+      QuickSort (arrayToSort, size);
       int foundIndex = GetIndex (arrayToSort, size, elementSearch[i]);
       bool searchTestPass = (foundIndex == expectedIndex[i]);
       bool sortTestPass = AreArraysEqual (arrayToSort, expectedResults[i], size, size);
@@ -119,7 +115,7 @@ void GetUserInput () {
    }
    printf ("Unsorted Array: ");
    PrintArray (array, size);
-  SortEntireArray (array, size);
+   QuickSort (array, size);
    printf ("\nSorted Array: ");
    PrintArray (array, size);
    int target;    // Target element to search
