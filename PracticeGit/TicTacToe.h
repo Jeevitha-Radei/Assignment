@@ -13,18 +13,18 @@ extern int currentPlayer;  // 1 for player X, 2 for player O
 extern char playerSymbols[];  // Array to hold player symbols
 
 /// <summary>Function to initialize the game board with empty spaces</summary>
-void initializeBoard ();
+void InitializeBoard ();
 
 /// <summary>Function to check if the current player has won</summary>
-int checkWinner ();
+int IsPlayerWon ();
 
 /// <summary>Function to check if the board is full (a draw)</summary>
-int isBoardFull ();
+int IsBoardFull ();
 
 /// <summary>Function to make a move for the current player</summary>
-void makeMove (move);
+void MakeMove (move);
 
 /// <summary>Function to switch the current player</summary>
-void switchPlayer ();
+void SwitchPlayer ();
 
 #endif

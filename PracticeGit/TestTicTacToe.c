@@ -5,20 +5,21 @@
 // TestTicTacToe.c - Test Program to implement the logic
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include "TicTacToe.h"
 
 /// <summary>Function to get valid user input using fgets</summary>
-int getValidMove ();
+int GetValidMove ();
 
 /// <summary>Function to display the game board</summary>
-void displayBoard ();
+void DisplayBoard ();
 
-int getValidMove () {
+int GetValidMove () {
    char input[10];
    int move;
-   while (1) {
+   while (true) {
       printf ("Player %d, enter a number (1-9): ", currentPlayer);
       if (fgets (input, sizeof (input), stdin) == NULL) {
          printf ("Error reading input. Please try again.\n");
@@ -38,7 +39,7 @@ int getValidMove () {
 }
 
 
-void displayBoard () {
+void DisplayBoard () {
    printf ("\n");
    for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -47,27 +48,26 @@ void displayBoard () {
       }
       printf ("\n");
       if (i < 2) printf ("--------\n");
-   }
-   printf ("\n");
+   } printf ("\n");
 }
 
 int main () {
    int gameOver = 0;
-   initializeBoard ();
-   displayBoard ();
+   InitializeBoard ();
+   DisplayBoard ();
    while (!gameOver) {
-      int move = getValidMove ();
-      makeMove (move);
-      displayBoard ();
-      if (checkWinner ()) {
+      int move = GetValidMove ();
+      MakeMove (move);
+      DisplayBoard ();
+      if (IsPlayerWon ()) {
          printf ("Player %d wins! Hurrahhh!\n", currentPlayer);
          gameOver = 1;
       }
-      else if (isBoardFull ()) {
+      else if (IsBoardFull ()) {
          printf ("It's a draw!\n");
          gameOver = 1;
       }
-      if (!gameOver) switchPlayer ();
+      else SwitchPlayer ();
    }
    return 0;
 }
